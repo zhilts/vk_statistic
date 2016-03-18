@@ -1,0 +1,5 @@
+# Managed by Salt
+
+127.0.0.1	localhost.localdomain localhost localhost4 localhost4.localdomain4
+::1		localhost localhost.localdomain localhost6 localhost6.localdomain6
+{{ grains['fqdn_ip4'][0] }}	{{ grains['id'] }} {{ grains['id'].split('.')[0] }}

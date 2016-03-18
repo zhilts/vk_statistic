@@ -1,0 +1,31 @@
+---
+driver:
+  name: vagrant
+
+platforms:
+  - name: centos-6.5
+
+provisioner:
+  name: salt_solo
+  formula: base
+  salt_install: yum
+  dependancies:
+    - packages
+  pillars-from-files:
+    base.sls: ../_pillars/base.sls
+  pillars:
+    top.sls:
+      base:
+        "*":
+          - base
+  state_top:
+    base:
+      '*':
+        - base.hosts
+        - base.motd
+        - base.selinux
+        - base.sysctl
+
+suites:
+  - name: default
+

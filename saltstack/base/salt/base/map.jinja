@@ -1,0 +1,16 @@
+{% set base = salt['grains.filter_by']({
+    'dev': {
+        'nameservers': ['8.8.8.8'],
+    },
+    'local': {
+        'nameservers': ['8.8.8.8'],
+    },
+    'Unknown': {
+        'nameservers': ['8.8.8.8'],
+    },
+    'default': {
+        'nameservers': ['10.100.158.252', '10.0.80.11', '10.0.80.12'],
+    },
+ },
+grain = 'user:pod',
+merge = salt['pillar.get']('base')) %}

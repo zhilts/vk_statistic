@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+#   /etc/rc.d/init.d/Xvfb
+#
+# Starts the X Frame Buffer
+#
+# chkconfig: - 84 16
+# description: X Frame Buffer
+# processname: Xvfb
+
+### BEGIN INIT INFO
+# Provides: Xvfb
+# Required-Start: $local_fs
+# Required-Stop: $local_fs
+# Default-Start:  2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: X Frame Buffer
+# Description: X Frame Buffer
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+
+do_status () {
+  if pidof Xvfb; then
+    return 0
+  else
+    return 4
+  fi
+}
+
+do_start () {
+  do_status
+  STATUS=$?
+  if [ $STATUS -eq 0 ]; then
+    echo "Xvfb is already running"
+    return 1
+  fi
+  echo "Starting Xvfb on :10"
+  /usr/bin/Xvfb :10 -screen 0 1920x1080x24 &
+  return 0
+}
+
+do_stop () {
+  do_status
+  STATUS=$?
+  if [ $STATUS -ne 0 ]; then
+    echo "Xvfb is not running"
+    return 1
+  fi
+  kill -9 $(pidof Xvfb)
+  return 0
+}
+
+case "$1" in
+  start)
+    do_start
+  ;;
+
+  stop)
+    do_stop
+  ;;
+
+  status)
+    do_status
+  ;;
+  *)
+    echo "Usage: /etc/init.d/Xvfb {start|stop|status}"
+    exit 1
+  ;;
+esac
+
+exit $?

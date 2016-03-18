@@ -1,0 +1,9 @@
+/var/log/salt/minion { 
+	weekly 
+	missingok 
+	rotate 5 
+	compress 
+	notifempty 
+	postrotate /usr/bin/monit restart salt-minion 
+	endscript 
+}

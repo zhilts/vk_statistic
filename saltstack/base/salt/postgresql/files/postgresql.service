@@ -1,0 +1,2 @@
+{% from 'postgresql/init.sls' import pgVer with context -%}
+.include /lib/systemd/system/postgresql-{{ pgVer }}.service

@@ -1,0 +1,6 @@
+hi Search ctermbg=LightBlue
+set expandtab
+set ts=4
+set cindent shiftwidth=4
+set ignorecase
+set wildmode=longest,list
