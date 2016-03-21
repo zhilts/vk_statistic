@@ -1,0 +1,9 @@
+[
+  {
+    "model": "entities.vkgroup",
+    "pk": 1,
+    "fields": {
+      "domain": "de_lord"
+    }
+  }
+]

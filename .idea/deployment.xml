@@ -9,6 +9,14 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="vk">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/vagrant/vk-bidder" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/vagrant/vk-bidder/vk_bidder" local="$PROJECT_DIR$/vk_bidder" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
   </component>
 </project>

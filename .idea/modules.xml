@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/vk-bidder.iml" filepath="$PROJECT_DIR$/.idea/vk-bidder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/vk_bidder/vk_bidder.iml" filepath="$PROJECT_DIR$/vk_bidder/vk_bidder.iml" />
     </modules>
   </component>
 </project>
