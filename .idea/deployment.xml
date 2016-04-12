@@ -12,8 +12,8 @@
       <paths name="vk">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/vagrant/vk-bidder" local="$PROJECT_DIR$" web="/" />
-            <mapping deploy="/home/vagrant/vk-bidder/vk_bidder" local="$PROJECT_DIR$/vk_bidder" web="/" />
+            <mapping deploy="/home/vagrant/vk-fetch" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/vagrant/vk-fetch/vk_fetch" local="$PROJECT_DIR$/vk_fetch" web="/" />
           </mappings>
         </serverdata>
       </paths>

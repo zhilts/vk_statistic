@@ -18,5 +18,5 @@ fab rdb
 
 ## Start Bidding
 ```shell
-fab manage:start_bidding
+fab manage:start_fetching
 ```

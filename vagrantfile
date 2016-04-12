@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define 'dev' do |srv|
 
-    srv.vm.hostname = 'dev.vk-bidder.vagrant'
+    srv.vm.hostname = 'dev.vk-fetch.vagrant'
     srv.vm.network 'private_network', type: 'dhcp'
 
     srv.vm.network 'forwarded_port', guest: '8000', host: 8000, id: 'api'
@@ -23,7 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     srv.vm.synced_folder 'saltstack/base', '/srv/', nfs: true
-    srv.vm.synced_folder './', '/home/vagrant/vk-bidder', nfs: true
+    srv.vm.synced_folder './', '/home/vagrant/vk-fetch', nfs: true
 
     ## Salt Masterless Minion: https://www.vagrantup.com/docs/provisioning/salt.html
     # Requires salt plugin: vagrant plugin install vagrant-salt

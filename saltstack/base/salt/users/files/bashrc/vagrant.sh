@@ -116,4 +116,4 @@ if ! shopt -oq posix; then
   fi
 fi
 
-cd ~/vk-bidder
+cd ~/vk-fetch
