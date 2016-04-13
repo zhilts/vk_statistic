@@ -1,3 +1,5 @@
+from threading import Thread
+
 import requests
 from django.core.management import BaseCommand
 
@@ -106,14 +108,29 @@ def update_group_info(group):
     return group
 
 
+class FetchLikes(Thread):
+    def __init__(self, post, *args, **kwargs):
+        self.post = post
+        super(FetchLikes, self).__init__(*args, **kwargs)
+
+    def run(self):
+        fetch_likes(self.post)
+
+
 def process_group(group):
     print('Starting processing group <{group_domain}>'.format(group_domain=group))
     group = update_group_info(group)
     existing_posts = set()
+    spawned_treads = []
     for post_data in _group_iterator(group.domain):
         post = process_post(post_data, group)
-        fetch_likes(post)
+        fetch_likes_thread = FetchLikes(post)
+        spawned_treads.append(fetch_likes_thread)
+        fetch_likes_thread.start()
         existing_posts.add(post.pk)
+
+    for thread in spawned_treads:
+        thread.join()
 
     VkPost.objects \
         .filter(group=group) \
