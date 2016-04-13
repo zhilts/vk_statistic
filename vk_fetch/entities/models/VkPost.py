@@ -12,7 +12,7 @@ class VkPost(models.Model):
     likes_count = models.IntegerField()
     reposts_count = models.IntegerField()
 
-    likes = models.ManyToManyField(VkUser)
+    likes = models.ManyToManyField(VkUser, related_name='posts')
 
     @property
     def owner_id(self):
