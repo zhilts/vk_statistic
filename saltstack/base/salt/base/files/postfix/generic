@@ -238,4 +238,4 @@
 #        Yorktown Heights, NY 10598, USA
 # 
 #                                                                     GENERIC(5)
-@{{ grains['fqdn'] }}	no-reply@family-tree.com
+@{{ grains['fqdn'] }}	no-reply@vk-fetch.com

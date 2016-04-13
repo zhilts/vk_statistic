@@ -116,7 +116,7 @@ repl postgres connlimit:
 
 {%- endif %}
 
-family-tree postgres user:
+vk-fetch postgres user:
   postgres_user:
     - present
     - name: user
@@ -124,8 +124,8 @@ family-tree postgres user:
     - require:
       - service: postgresql
 
-{% for db in ['family-tree'] %}
-family-tree postgres db {{ db }}:
+{% for db in ['vk-fetch'] %}
+vk-fetch postgres db {{ db }}:
   postgres_database:
     - present
     - name: {{ db }}

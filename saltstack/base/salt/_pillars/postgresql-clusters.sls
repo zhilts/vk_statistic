@@ -1,6 +1,6 @@
 postgresql:
   clusterMembers:
-    db.family-tree.int:
+    db.vk-fetch.int:
       memberRole: master
-      memberTarget: db.family-tree.int
+      memberTarget: db.vk-fetch.int
       clusterSize: 1

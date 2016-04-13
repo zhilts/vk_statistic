@@ -7,7 +7,7 @@
     - empty_password: True
     - groups:
       - wheel
-      - family-tree
+      - vk-fetch
   file:
     - directory
     - name: /home/{{user}}
