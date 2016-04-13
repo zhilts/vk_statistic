@@ -3,7 +3,6 @@ from django.core.management import BaseCommand
 
 from entities.models import VkGroup, VkPost
 
-
 base_url = 'https://api.vk.com/method/{method_name}'
 paging = 100
 
@@ -12,20 +11,19 @@ class VkAPI(object):
     WALL_GET = 'wall.get'
 
 
-def _bulk_group_iterator(group_domain):
+def _bulk_iterator(method, request_params={}):
     offset = 0
-    request_params = dict(
-            domain=group_domain,
+    request = dict(
             count=paging,
-            filter='all',
             v='5.50'
     )
-    url = base_url.format(method_name=VkAPI.WALL_GET)
+    request.update(request_params)
+    url = base_url.format(method_name=method)
     count = None
     while True:
-        request_params['offset'] = offset
+        request['offset'] = offset
         response = requests \
-            .get(url, params=request_params) \
+            .get(url, params=request) \
             .json() \
             .get('response', {})
 
@@ -39,10 +37,29 @@ def _bulk_group_iterator(group_domain):
             return
 
 
+def _bulk_group_iterator(group_domain):
+    return _bulk_iterator(
+            VkAPI.WALL_GET,
+            dict(
+                    domain=group_domain,
+                    filter='all'
+            )
+    )
+
+
 def _group_iterator(group_domain):
     for post_page in _bulk_group_iterator(group_domain):
         for post in post_page:
             yield post
+
+
+def fetch_likes(post):
+    """
+
+    :param post: VkPost
+    :return:
+    """
+    pass
 
 
 def process_post(post_data, group):
