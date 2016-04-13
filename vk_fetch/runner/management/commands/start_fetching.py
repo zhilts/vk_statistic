@@ -1,7 +1,7 @@
 import requests
 from django.core.management import BaseCommand
 
-from entities.models import VkGroup, VkPost
+from entities.models import VkGroup, VkPost, VkUser
 
 base_url = 'https://api.vk.com/method/{method_name}'
 paging = 100
@@ -9,9 +9,14 @@ paging = 100
 
 class VkAPI(object):
     WALL_GET = 'wall.get'
+    LIKES_GET_LIST = 'likes.getList'
+    GROUP_INFO = 'groups.getById'
 
 
-def _bulk_iterator(method, request_params={}):
+def _bulk_vk_iterator(method, request_params=None):
+    if request_params is None:
+        request_params = {}
+
     offset = 0
     request = dict(
             count=paging,
@@ -37,8 +42,14 @@ def _bulk_iterator(method, request_params={}):
             return
 
 
-def _bulk_group_iterator(group_domain):
-    return _bulk_iterator(
+def _vk_iterator(method, parameters):
+    for page in _bulk_vk_iterator(method, parameters):
+        for item in page:
+            yield item
+
+
+def _group_iterator(group_domain):
+    return _vk_iterator(
             VkAPI.WALL_GET,
             dict(
                     domain=group_domain,
@@ -47,19 +58,26 @@ def _bulk_group_iterator(group_domain):
     )
 
 
-def _group_iterator(group_domain):
-    for post_page in _bulk_group_iterator(group_domain):
-        for post in post_page:
-            yield post
+def _likes_iterator(post):
+    return _vk_iterator(
+            VkAPI.LIKES_GET_LIST,
+            dict(
+                    type='post',
+                    item_id=post.post_id,
+                    owner_id=post.owner_id
+            )
+    )
 
 
 def fetch_likes(post):
     """
-
     :param post: VkPost
     :return:
     """
-    pass
+    post.likes.clear()
+    for user_id in _likes_iterator(post):
+        user, _ = VkUser.objects.get_or_create(id=user_id)
+        post.likes.add(user)
 
 
 def process_post(post_data, group):
@@ -75,11 +93,26 @@ def process_post(post_data, group):
     return post
 
 
+def update_group_info(group):
+    url = base_url.format(method_name=VkAPI.GROUP_INFO)
+    response = requests \
+        .get(url, params=dict(group_id=group.domain)) \
+        .json() \
+        .get('response', {})[0]
+
+    group.name = response.get('name', None)
+    group.vk_id = response.get('gid', None)
+    group.save()
+    return group
+
+
 def process_group(group):
     print('Starting processing group <{group_domain}>'.format(group_domain=group))
+    group = update_group_info(group)
     existing_posts = set()
     for post_data in _group_iterator(group.domain):
         post = process_post(post_data, group)
+        fetch_likes(post)
         existing_posts.add(post.pk)
 
     VkPost.objects \

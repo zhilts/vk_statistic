@@ -1,6 +1,7 @@
 from django.db import models
 
-from entities.models import VkGroup
+from entities.models.VkGroup import VkGroup
+from entities.models.VkUser import VkUser
 
 
 class VkPost(models.Model):
@@ -10,6 +11,12 @@ class VkPost(models.Model):
     text = models.TextField()
     likes_count = models.IntegerField()
     reposts_count = models.IntegerField()
+
+    likes = models.ManyToManyField(VkUser)
+
+    @property
+    def owner_id(self):
+        return self.group.owner_id
 
     def __str__(self):
         return '{group}: likes={likes}, reposts={reposts}; text={text}' \
