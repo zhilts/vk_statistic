@@ -1,0 +1,12 @@
+<h1>Groups</h1>
+<ul>
+    {% for post in object_list %}
+    <li>
+        {{post.text}}
+        {{post.likes_count}} likes
+        {{post.reposts_count}} reposts
+    </li>
+    {% empty %}
+    <li>No articles yet.</li>
+    {% endfor %}
+</ul>

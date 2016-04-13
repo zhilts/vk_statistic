@@ -1,0 +1,10 @@
+<h1>Groups</h1>
+<ul>
+    {% for user in object_list %}
+    <li>
+        {{user.id}}
+    </li>
+    {% empty %}
+    <li>No articles yet.</li>
+    {% endfor %}
+</ul>
