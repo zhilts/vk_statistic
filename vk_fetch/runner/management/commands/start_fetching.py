@@ -8,11 +8,19 @@ from entities.models import VkGroup, VkPost, VkUser
 base_url = 'https://api.vk.com/method/{method_name}'
 paging = 100
 
+base_request_pairs = (
+    ('v', '5.50'),
+)
+base_iteration_request_pairs = base_request_pairs + (
+    ('count', paging),
+)
+
 
 class VkAPI(object):
     WALL_GET = 'wall.get'
     LIKES_GET_LIST = 'likes.getList'
     GROUP_INFO = 'groups.getById'
+    USERS_GET = 'users.get'
 
 
 def _bulk_vk_iterator(method, request_params=None):
@@ -20,10 +28,7 @@ def _bulk_vk_iterator(method, request_params=None):
         request_params = {}
 
     offset = 0
-    request = dict(
-            count=paging,
-            v='5.50'
-    )
+    request = dict(base_iteration_request_pairs)
     request.update(request_params)
     url = base_url.format(method_name=method)
     count = None
@@ -69,6 +74,26 @@ def _likes_iterator(post):
                     owner_id=post.owner_id
             )
     )
+
+
+def fetch_user(user):
+    url = base_url.format(method_name=VkAPI.USERS_GET)
+    request = dict(
+            base_request_pairs + (
+                ('user_ids', user.id),
+                ('fields', 'photo_50')
+            )
+    )
+    info = requests \
+        .get(url, params=request) \
+        .json() \
+        .get('response', {})[0]
+
+    user.first_name = info.get('first_name', None)
+    user.last_name = info.get('last_name', None)
+    user.photo_50 = info.get('photo_50', None)
+    user.save()
+    return user
 
 
 def fetch_likes(post):
@@ -139,9 +164,31 @@ def process_group(group):
     print('Processing group <{group_domain}> complete'.format(group_domain=group))
 
 
+class FetchUser(Thread):
+    def __init__(self, user):
+        self.user = user
+        super(FetchUser, self).__init__()
+
+    def run(self):
+        fetch_user(self.user)
+
+
+def update_users():
+    threads = []
+    for user in VkUser.objects.all():
+        fetch_user(user)
+        # thread = FetchUser(user)
+        # thread.start()
+        # threads.append(thread)
+
+    for thread in threads:
+        thread.join()
+
+
 def process_all():
     for group in VkGroup.objects.all():
         process_group(group)
+    update_users()
 
 
 # The class must be named Command, and subclass BaseCommand

@@ -24,6 +24,8 @@ def load_data(path):
 
 @task(alias='rdb')
 def recreate_database():
+    local('dropdb vk-fetch --if-exists')
+    local('createdb vk-fetch --owner=user')
     manage('migrate --run-syncdb')
     # superuser: root/1qaz@WSX
     load_data('entities/datafixtures/users.json')
