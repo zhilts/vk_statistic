@@ -15,3 +15,9 @@ class PostListView(ListView):
 class UserListView(ListView):
     def get_queryset(self):
         return VkUser.objects.filter(posts__group__vk_id=self.kwargs.get('group_id'))
+
+
+class UserLikesListView(ListView):
+    def get_queryset(self):
+        post=VkPost.objects.get(pk=self.kwargs.get('post_id'))
+        return post.likes.all()

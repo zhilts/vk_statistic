@@ -1,9 +1,9 @@
-<h1>Groups</h1>
+<h1>Posts</h1>
 <ul>
     {% for post in object_list %}
     <li>
         {{post.text}}
-        {{post.likes_count}} likes
+        <a href="{% url 'likes-by-post' post_id=post.pk %}">{{post.likes_count}} likes</a>
         {{post.reposts_count}} reposts
     </li>
     {% empty %}
