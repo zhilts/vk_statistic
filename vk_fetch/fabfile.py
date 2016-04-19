@@ -30,3 +30,4 @@ def recreate_database():
     # superuser: root/1qaz@WSX
     load_data('entities/datafixtures/users.json')
     load_data('entities/datafixtures/vk_groups.json')
+

@@ -149,9 +149,11 @@ def process_group(group):
     spawned_treads = []
     for post_data in _group_iterator(group.domain):
         post = process_post(post_data, group)
-        fetch_likes_thread = FetchLikes(post)
-        spawned_treads.append(fetch_likes_thread)
-        fetch_likes_thread.start()
+        fetch_likes(post)
+        # fixme: performance
+        # fetch_likes_thread = FetchLikes(post)
+        # spawned_treads.append(fetch_likes_thread)
+        # fetch_likes_thread.start()
         existing_posts.add(post.pk)
 
     for thread in spawned_treads:
@@ -177,6 +179,7 @@ def update_users():
     threads = []
     for user in VkUser.objects.all():
         fetch_user(user)
+        # fixme: performance
         # thread = FetchUser(user)
         # thread.start()
         # threads.append(thread)
