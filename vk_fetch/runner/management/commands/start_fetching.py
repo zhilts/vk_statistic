@@ -1,9 +1,13 @@
+import datetime
+
+from django.utils import timezone
 from threading import Thread
 
 import requests
 from django.core.management import BaseCommand
+from django.db.models import F
 
-from entities.models import VkGroup, VkPost, VkUser
+from entities.models import VkGroup, VkPost, VkUser, VkUserStatisticTotal, VkUserStatisticDaily, VkUserStatisticHourly
 
 base_url = 'https://api.vk.com/method/{method_name}'
 paging = 100
@@ -175,7 +179,7 @@ class FetchUser(Thread):
         fetch_user(self.user)
 
 
-def update_users():
+def update_users_info():
     threads = []
     for user in VkUser.objects.all():
         fetch_user(user)
@@ -188,10 +192,30 @@ def update_users():
         thread.join()
 
 
+def update_users_statistic():
+    now = datetime.datetime.now(timezone.utc)
+    current_hour = now.replace(minute=0, second=0, microsecond=0, tzinfo=timezone.utc)
+    current_date = current_hour.replace(hour=0)
+    for user in VkUser.objects.all():
+        total_statistic, _ = VkUserStatisticTotal.objects.get_or_create(user=user)
+        new_likes = user.liked_posts.all().count()
+        delta_likes = new_likes - total_statistic.likes
+
+        VkUserStatisticHourly.objects.get_or_create(user=user, timestamp=current_hour)
+        VkUserStatisticDaily.objects.get_or_create(user=user, date=current_date)
+
+        VkUserStatisticHourly.objects.filter(user=user, timestamp=current_hour).update(likes=F('likes') + delta_likes)
+        VkUserStatisticDaily.objects.filter(user=user, date=current_date).update(likes=F('likes') + delta_likes)
+
+        total_statistic.likes = new_likes
+        total_statistic.save()
+
+
 def process_all():
     for group in VkGroup.objects.all():
         process_group(group)
-    update_users()
+    update_users_statistic()
+    # update_users_info()
 
 
 # The class must be named Command, and subclass BaseCommand
