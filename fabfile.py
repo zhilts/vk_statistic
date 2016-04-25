@@ -8,11 +8,33 @@ release_tag = 'current-release'
 
 
 class Stashed(object):
+    def __init__(self):
+        super(Stashed, self).__init__()
+        self.stashed = False
+
     def __enter__(self):
-        local('git stash')
+        try:
+            local('git stash')
+            self.stashed = True
+        except:
+            pass
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        local('git stash pop')
+        if self.stashed:
+            local('git stash pop')
+
+
+class SshKey(object):
+    def __init__(self, key_path):
+        super(SshKey, self).__init__()
+        self.key_path = key_path
+
+    def __enter__(self):
+        local('eval "$(ssh-agent -s)"')
+        local('ssh-add {key_path}'.format(key_path=self.key_path))
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        local('kill $SSH_AGENT_PID')
 
 
 @task()
@@ -70,8 +92,9 @@ def release_develop():
     tags_str = local('git tag -l --contains HEAD', capture=True)
     tags = re.compile('[\w-]+', re.MULTILINE).findall(tags_str)
     with Stashed():
-        if release_tag not in tags:
-            checkout('tags/{release_tag}'.format(release_tag=release_tag))
+        with SshKey('~/.ssh/id_rsa'):
+            if release_tag not in tags:
+                checkout('tags/{release_tag}'.format(release_tag=release_tag))
             local('git fetch origin')
             local('git merge --log --no-edit origin/develop')
             local('git tag -a "{release_tag}" -f')

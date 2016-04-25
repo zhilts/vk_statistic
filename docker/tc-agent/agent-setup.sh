@@ -30,6 +30,9 @@ fi
 service postgresql start
 
 
-$AGENT_DIR/bin/agent.sh run
+$AGENT_DIR/bin/agent.sh start
 
 heroku login
+
+echo "public ssh key:"
+cat ~/.ssh/id_rsa.pub

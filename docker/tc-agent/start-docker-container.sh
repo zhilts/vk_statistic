@@ -15,4 +15,4 @@ else
 fi
 
 docker run -e TEAMCITY_SERVER=$TEAMCITY_SERVER -e TEAMCITY_AGENTNAME=$AGENT_NAME -dt --name $AGENT_NAME vk/agent
-docker exec $AGENT_NAME /root/files/agent-setup.sh
+docker exec -it $AGENT_NAME /agent-setup.sh
