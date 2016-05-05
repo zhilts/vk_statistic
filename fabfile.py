@@ -85,8 +85,6 @@ def release_develop():
     start_branch = git_current_branch()
     tags_str = local('git tag -l --contains HEAD', capture=True)
     tags = re.compile('[\w-]+', re.MULTILINE).findall(tags_str)
-    deploy_key_path = os.environ.get(KEY_PATH_ENV, '~/.ssh/id_rsa')
-    puts(yellow('Using {key} key for Heroku'.format(key=deploy_key_path)))
     with Stashed():
         if release_tag not in tags:
             checkout('tags/{release_tag}'.format(release_tag=release_tag))
