@@ -1,10 +1,13 @@
 import re
+from fabric.colors import yellow
 from fabric.context_managers import lcd
 from fabric.decorators import task
-from fabric.operations import local
+from fabric.operations import local, os
 from fabric.api import settings
+from fabric.utils import puts
 
 release_tag = 'current-release'
+KEY_PATH_ENV = 'HEROKU_KEY'
 
 
 class Stashed(object):
@@ -13,28 +16,19 @@ class Stashed(object):
         self.stashed = False
 
     def __enter__(self):
-        try:
-            local('git stash')
-            self.stashed = True
-        except:
-            pass
+        with settings(warn_only=True):
+            result = local('git diff-index --quiet HEAD --')
+            if result.return_code == 0:
+                self.stashed = False
+            else:
+                self.stashed = True
+                local('git stash')
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+        print(self.stashed)
+
+    def __exit__(self, exc_type, exc_val,  exc_tb):
         if self.stashed:
             local('git stash pop')
-
-
-class SshKey(object):
-    def __init__(self, key_path):
-        super(SshKey, self).__init__()
-        self.key_path = key_path
-
-    def __enter__(self):
-        local('eval "$(ssh-agent -s)"')
-        local('ssh-add {key_path}'.format(key_path=self.key_path))
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        local('kill $SSH_AGENT_PID')
 
 
 @task()
@@ -91,15 +85,17 @@ def release_develop():
     start_branch = git_current_branch()
     tags_str = local('git tag -l --contains HEAD', capture=True)
     tags = re.compile('[\w-]+', re.MULTILINE).findall(tags_str)
+    deploy_key_path = os.environ.get(KEY_PATH_ENV, '~/.ssh/id_rsa')
+    puts(yellow('Using {key} key for Heroku'.format(key=deploy_key_path)))
     with Stashed():
-        with SshKey('~/.ssh/id_rsa'):
-            if release_tag not in tags:
-                checkout('tags/{release_tag}'.format(release_tag=release_tag))
-            local('git fetch origin')
-            local('git merge --log --no-edit origin/develop')
-            local('git tag -a "{release_tag}" -f')
-            local('git push origin --tags -f')
+        if release_tag not in tags:
+            checkout('tags/{release_tag}'.format(release_tag=release_tag))
+        local('git fetch origin')
+        local('git merge --log --no-edit origin/develop')
+        local('git tag -a "{release_tag}" -f')
+        local('git push origin --tags -f')
     checkout(start_branch)
+
 
 @task()
 def vk(command):
