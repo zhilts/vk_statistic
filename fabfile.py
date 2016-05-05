@@ -24,8 +24,6 @@ class Stashed(object):
                 self.stashed = True
                 local('git stash')
 
-        print(self.stashed)
-
     def __exit__(self, exc_type, exc_val,  exc_tb):
         if self.stashed:
             local('git stash pop')
