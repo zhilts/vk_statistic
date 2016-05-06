@@ -31,6 +31,7 @@ service postgresql start
 
 git config --global user.email "$TEAMCITY_AGENTNAME@$TEAMCITY_SERVER"
 git config --global user.name "$TEAMCITY_AGENTNAME"
+git config --global push.default simple
 
 ${AGENT_DIR}/bin/agent.sh start
 

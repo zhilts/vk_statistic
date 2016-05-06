@@ -67,6 +67,7 @@ def deploy():
         with settings(warn_only=True):
             local('git remote add staging git@heroku.com:vk-fetch.git ')
         local('git fetch origin')
+        local('git fetch staging')
         local('git merge --log --no-edit release')
         local('git push --force --set-upstream staging master:master')
         checkout(start_branch)
