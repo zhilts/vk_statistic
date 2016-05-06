@@ -88,7 +88,7 @@ def release_develop():
             checkout('tags/{release_tag}'.format(release_tag=release_tag))
         local('git fetch origin')
         local('git merge --log --no-edit origin/develop')
-        local('git tag -a "{release_tag}" -f')
+        local('git tag -a "{release_tag}" -f'.format(release_tag=release_tag))
         local('git push origin --tags -f')
     checkout(start_branch)
 
