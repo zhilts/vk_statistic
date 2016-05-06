@@ -36,6 +36,7 @@ git config --global push.default simple
 ${AGENT_DIR}/bin/agent.sh start
 
 heroku login
+heroku keys:add ~/.ssh/id_rsa.pub
 
 echo "public ssh key:"
 cat ~/.ssh/id_rsa.pub
