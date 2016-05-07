@@ -1,5 +1,5 @@
 # Create your views here.
-from django.db.models import Count
+from django.db.models import Count, F
 from django.views.generic import ListView
 
 from entities.models import VkGroup, VkPost, VkUser
@@ -15,14 +15,19 @@ class PostListView(ListView):
 
 
 class UserListView(ListView):
+
     def get_queryset(self):
+        viewer_id = self.kwargs.get('viewer_id', None)
+
         qs = VkUser.objects \
-            .filter(posts__group__vk_id=self.kwargs.get('group_id')) \
+            .filter(liked_posts__group__vk_id=self.kwargs.get('group_id')) \
             .annotate(like_count=Count('id')) \
-            .distinct() \
-            .order_by('last_name', 'first_name')
-        print(qs.count())
-        return qs
+            .annotate(total_score=F('like_count')) \
+            .distinct()
+        if viewer_id is not None:
+            return qs.order_by('-total_score')
+        else:
+            return qs.order_by('last_name', 'first_name')
 
 
 class UserLikesListView(ListView):

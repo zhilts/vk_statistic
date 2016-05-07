@@ -8,6 +8,7 @@ from django.core.management import BaseCommand
 from django.db.models import F
 
 from entities.models import VkGroup, VkPost, VkUser, VkUserStatisticTotal, VkUserStatisticDaily, VkUserStatisticHourly
+from entities.models.VkUserStatistic import VkUserStatisticWeekly
 
 base_url = 'https://api.vk.com/method/{method_name}'
 paging = 100
@@ -192,20 +193,27 @@ def update_users_info():
         thread.join()
 
 
-def update_users_statistic():
+def update_users_statistic(group):
     now = datetime.datetime.now(timezone.utc)
     current_hour = now.replace(minute=0, second=0, microsecond=0, tzinfo=timezone.utc)
     current_date = current_hour.replace(hour=0)
+    current_week = current_date - datetime.timedelta(days=current_date.weekday())
+
     for user in VkUser.objects.all():
-        total_statistic, _ = VkUserStatisticTotal.objects.get_or_create(user=user)
+        total_statistic, _ = VkUserStatisticTotal.objects.get_or_create(user=user, group=group)
         new_likes = user.liked_posts.all().count()
         delta_likes = new_likes - total_statistic.likes
 
-        VkUserStatisticHourly.objects.get_or_create(user=user, timestamp=current_hour)
-        VkUserStatisticDaily.objects.get_or_create(user=user, date=current_date)
+        VkUserStatisticHourly.objects.get_or_create(user=user, group=group, timestamp=current_hour)
+        VkUserStatisticDaily.objects.get_or_create(user=user, group=group, date=current_date)
+        VkUserStatisticWeekly.objects.get_or_create(user=user, group=group, week=current_week)
 
-        VkUserStatisticHourly.objects.filter(user=user, timestamp=current_hour).update(likes=F('likes') + delta_likes)
-        VkUserStatisticDaily.objects.filter(user=user, date=current_date).update(likes=F('likes') + delta_likes)
+        VkUserStatisticHourly.objects.filter(user=user, group=group, timestamp=current_hour)\
+            .update(likes=F('likes') + delta_likes)
+        VkUserStatisticDaily.objects.filter(user=user, group=group, date=current_date)\
+            .update(likes=F('likes') + delta_likes)
+        VkUserStatisticWeekly.objects.filter(user=user, group=group, week=current_week) \
+            .update(likes=F('likes') + delta_likes)
 
         total_statistic.likes = new_likes
         total_statistic.save()
@@ -214,8 +222,8 @@ def update_users_statistic():
 def process_all():
     for group in VkGroup.objects.all():
         process_group(group)
-    update_users_statistic()
-    # update_users_info()
+        update_users_statistic(group)
+    update_users_info()
 
 
 # The class must be named Command, and subclass BaseCommand

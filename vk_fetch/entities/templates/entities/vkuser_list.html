@@ -3,7 +3,8 @@
     {% for user in object_list %}
     <li>
         <img src="{{ user.photo_50 }}">
-        <a href="https://vk.com/id{{user.id}}">{{ user.last_name }} {{ user.first_name }}</a> {{user.like_count}} likes
+        <a href="https://vk.com/id{{user.id}}">{{ user.last_name }} {{ user.first_name }}</a>
+        {{user.total_score}}: {{user.like_count}} likes
     </li>
     {% empty %}
     <li>No articles yet.</li>

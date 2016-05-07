@@ -17,11 +17,15 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from entities.views import GroupListView, PostListView, UserListView, UserLikesListView
+from vk_fetch.views import main_view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^groups/$', GroupListView.as_view(), name='group-list'),
     url(r'^posts/(?P<group_id>[0-9]+)/$', PostListView.as_view(), name='post-list'),
     url(r'^users/group/(?P<group_id>[0-9]+)/$', UserListView.as_view(), name='users-by-group'),
+    url(r'^users/group/(?P<group_id>[0-9]+)/as/(?P<viewer_id>[0-9]*)/$', UserListView.as_view(),
+        name='users-by-group-as-user'),
     url(r'^users/(?P<post_id>[0-9]+)/post/likes$', UserLikesListView.as_view(), name='likes-by-post'),
+    url(r'^main$', main_view, name='main'),
 ]
