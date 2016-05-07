@@ -1,10 +1,11 @@
 from django.db import models
 
-from entities.models import VkUser
+from entities.models import VkUser, VkGroup
 
 
 class VkUserStatisticBase(models.Model):
-    user = models.ForeignKey(VkUser)
+    group = models.ForeignKey(VkGroup, null=False)
+    user = models.ForeignKey(VkUser, null=False)
     likes = models.IntegerField(default=0)
 
     class Meta:
@@ -23,6 +24,13 @@ class VkUserStatisticDaily(VkUserStatisticBase):
 
     class Meta:
         db_table = 'user_statistic_daily'
+
+
+class VkUserStatisticWeekly(VkUserStatisticBase):
+    week = models.DateField()
+
+    class Meta:
+        db_table = 'user_statistic_weekly'
 
 
 class VkUserStatisticTotal(VkUserStatisticBase):

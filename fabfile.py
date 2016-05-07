@@ -21,7 +21,7 @@ class Stashed(object):
                 self.stashed = True
                 local('git stash')
 
-    def __exit__(self, exc_type, exc_val,  exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         if self.stashed:
             local('git stash pop')
 
@@ -39,9 +39,12 @@ def runserver():
 
 
 @task()
-def start():
+def start(mode='release'):
     with lcd('vk_fetch'):
-        local('gunicorn settings.wsgi --bind 0.0.0.0:$PORT')
+        if mode == 'release':
+            local('gunicorn settings.wsgi --bind 0.0.0.0:$PORT')
+        else:
+            local('./pyenv.sh gunicorn settings.wsgi --bind 0.0.0.0:$PORT')
 
 
 def checkout(branch):
@@ -70,6 +73,7 @@ def deploy():
         local('git fetch staging')
         local('git merge --log --no-edit release')
         local('git push --force --set-upstream staging master:master')
+        local('heroku run fab migrate')
         checkout(start_branch)
 
 
@@ -96,6 +100,11 @@ def vk(command):
 @task()
 def rdb():
     local('fab vk:rdb')
+
+
+@task()
+def migrate():
+    local('fab vk:migrate')
 
 
 @task()
