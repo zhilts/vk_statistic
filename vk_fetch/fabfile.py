@@ -23,6 +23,21 @@ def load_data(path):
 
 
 @task()
+def celery(mode=''):
+    manage('celery {mode}'.format(mode=mode))
+
+
+@task()
+def celery_worker(args=''):
+    celery('worker {args}'.format(args=args))
+
+
+@task()
+def celery_beat():
+    celery('beat')
+
+
+@task()
 def migrate():
     manage('migrate --run-syncdb')
 

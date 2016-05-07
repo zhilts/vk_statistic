@@ -33,7 +33,7 @@ def fact_grains():
       isVirtualBox = True
       grains['environment'] = "local-dev"
       grains['platform'] = "vbox"
-      grains['roles'] = ['db', 'api']
+      grains['roles'] = ['db', 'api', 'redis']
 
     # Miscelaneous Facts
     grains['ssh_host_fingerprint'] = __runCommand("ssh-keygen -l -f /etc/ssh/ssh_host_rsa_key.pub | awk {'print $2'}")

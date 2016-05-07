@@ -9,3 +9,6 @@ include:
 {% if 'api' in grains['roles'] %}
   - app.api
 {% endif %}
+{% if 'redis' in grains['roles'] %}
+  - redis
+{% endif %}

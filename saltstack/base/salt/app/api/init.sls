@@ -14,6 +14,7 @@ agent-pkgs:
       - python-virtualenv
       - gcc
       - python3-dev
+      - libffi-dev
 
 {% if grains['environment'] != 'local-dev' %}
 /etc/nginx/conf.d/agent.conf:

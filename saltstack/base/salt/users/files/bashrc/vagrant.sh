@@ -116,4 +116,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
+export PORT=8000
+
 cd ~/vk-fetch
+

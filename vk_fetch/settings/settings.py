@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.9/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
+from datetime import timedelta
 
 import os
 
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'runner',
     'entities',
+    'djcelery',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -121,6 +123,14 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
+# CELERY
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+
+import djcelery
+
+djcelery.setup_loader()
 try:
     environ = os.environ['ENVIRONMENT']
     module = __import__('settings.{environ}.settings'.format(environ=environ), globals(), locals(), ['*'])
