@@ -1,0 +1,35 @@
+from entities.models import VkPost
+from runner.fetching.posts import process_post, fetch_likes
+from vk_api import get_group_info, posts_for_group
+
+
+def update_group_info(group):
+    group_info = get_group_info(group.domain)
+    group.name = group_info.get('name', None)
+    group.vk_id = group_info.get('gid', None)
+    group.save()
+    return group
+
+
+def process_group(group):
+    print('Starting processing group <{group_domain}>'.format(group_domain=group))
+    group = update_group_info(group)
+    existing_posts = set()
+    spawned_treads = []
+    for post_data in posts_for_group(group.domain):
+        post = process_post(post_data, group)
+        fetch_likes(post)
+        # fixme: performance
+        # fetch_likes_thread = FetchLikes(post)
+        # spawned_treads.append(fetch_likes_thread)
+        # fetch_likes_thread.start()
+        existing_posts.add(post.pk)
+
+    for thread in spawned_treads:
+        thread.join()
+
+    VkPost.objects \
+        .filter(group=group) \
+        .exclude(pk__in=existing_posts).delete()
+
+    print('Processing group <{group_domain}> complete'.format(group_domain=group))

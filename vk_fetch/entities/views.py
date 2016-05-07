@@ -15,7 +15,6 @@ class PostListView(ListView):
 
 
 class UserListView(ListView):
-
     def get_queryset(self):
         viewer_id = self.kwargs.get('viewer_id', None)
 

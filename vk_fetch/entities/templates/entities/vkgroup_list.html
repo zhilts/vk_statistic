@@ -1,10 +1,14 @@
 <h1>Groups</h1>
 <ul>
     {% for group in object_list %}
-    <li>{{ group.domain }}
-        <a href="{% url 'post-list' group_id=group.vk_id %}">posts</a></li>
-        <a href="{% url 'users-by-group' group_id=group.vk_id %}">users</a></li>
+        <li>{{ group.domain }}
+            {% if group.vk_id %}
+                <a href="{% url 'post-list' group_id=group.vk_id %}">posts</a></li>
+                <a href="{% url 'users-by-group' group_id=group.vk_id %}">users</a></li>
+            {% else %}
+                Not loaded yet
+            {% endif %}
     {% empty %}
-    <li>No articles yet.</li>
+        <li>No articles yet.</li>
     {% endfor %}
 </ul>
