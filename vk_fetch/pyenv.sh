@@ -13,7 +13,6 @@ PYENV=$($READ_LINK -f "./env")
 
 if ! [[ -d $PYENV ]]; then
     echo "error: virtual env not found."
-    exit 0
 fi
 
 if [[ ${@} == "" ]]; then
