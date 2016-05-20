@@ -47,12 +47,12 @@ def start(mode='release'):
             local('./pyenv.sh gunicorn settings.wsgi --bind 0.0.0.0:$PORT')
 
 
-def checkout(branch):
+def checkout(branch, remote='origin'):
     with settings(warn_only=True):
         res = local('git rev-parse --verify {branch}'.format(branch=branch))
         branch_exists = res.succeeded
         if branch_exists:
-            local('git checkout {branch} && git pull'.format(branch=branch))
+            local('git checkout {branch} && git pull {remote} {branch}'.format(branch=branch, remore=remote))
         else:
             local('git checkout -b {branch} origin/{branch}'.format(branch=branch))
 
