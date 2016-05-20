@@ -87,7 +87,7 @@ def release_develop():
 
         local('git fetch origin')
         local('git merge --log --no-edit origin/develop')
-        local('git push origin')
+        local('git push --set-upstream origin release')
 
         checkout(start_branch)
 
