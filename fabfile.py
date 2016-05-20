@@ -52,7 +52,7 @@ def checkout(branch, remote='origin'):
         res = local('git rev-parse --verify {branch}'.format(branch=branch))
         branch_exists = res.succeeded
         if branch_exists:
-            local('git checkout {branch} && git pull {remote} {branch}'.format(branch=branch, remore=remote))
+            local('git checkout {branch} && git pull {remote} {branch}'.format(branch=branch, remote=remote))
         else:
             local('git checkout -b {branch} origin/{branch}'.format(branch=branch))
 
