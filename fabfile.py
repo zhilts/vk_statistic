@@ -74,6 +74,7 @@ def deploy():
         local('git merge --log --no-edit release')
         local('git push --force --set-upstream staging master:master')
         local('heroku run fab migrate')
+        local('heroku run fab collectstatic')
         checkout(start_branch)
 
 
@@ -110,3 +111,8 @@ def migrate():
 @task()
 def start_fetching():
     local('fab vk:"manage:start_fetching"')
+
+
+@task()
+def collectstatic():
+    local('fab vk:"manage:\'collectstatic --noinput\'"')

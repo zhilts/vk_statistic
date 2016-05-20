@@ -25,7 +25,7 @@ SECRET_KEY = '#k@qw09kcf4$su-2d+%7%84*bi7179z2tvv36l&h*5#l_+0q++'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -122,6 +122,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # CELERY
 BROKER_URL = 'redis://localhost:6379'
