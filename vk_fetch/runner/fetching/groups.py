@@ -1,4 +1,5 @@
 from entities.models import VkPost
+from runner.fetching import update_users_statistic
 from runner.fetching.likes import fetch_likes
 from runner.fetching.posts import update_post
 from vk_api import get_group_info, posts_for_group
@@ -32,5 +33,7 @@ def process_group(group):
     VkPost.objects \
         .filter(group=group) \
         .exclude(pk__in=existing_posts).delete()
+
+    update_users_statistic(group)
 
     print('Processing group <{group_domain}> complete'.format(group_domain=group))
