@@ -1,11 +1,12 @@
 from settings.settings import *
 
-import dj_database_url
 DEBUG = False
 
-db_from_env = dj_database_url.config()
-DATABASES['default'].update(db_from_env)
-
-from urllib.parse import urlparse
+DATABASES['default'].update({
+    'NAME': 'vk_fetch',
+    'USER': 'vk_fetch',
+    'PASS': '{fqRJnKb7y!R}:2.',
+    'HOST': 'vk-fetch.cjovx6nrl7nk.us-west-2.rds.amazonaws.com'
+})
 
 BROKER_URL = os.environ.get('REDIS_URL')
