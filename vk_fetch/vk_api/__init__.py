@@ -1,4 +1,5 @@
 import requests
+from django.core.paginator import Paginator
 
 base_url = 'https://api.vk.com/method/{method_name}'
 paging = 100
@@ -59,7 +60,7 @@ def _vk_iterator(method, parameters):
             yield item
 
 
-def get_user_info(user_id):
+def get_users_info(user_id):
     url = base_url.format(method_name=VkAPI.USERS_GET)
     request = dict(
             base_request_pairs + (
@@ -69,7 +70,7 @@ def get_user_info(user_id):
     )
     info = safe_get(url, params=request) \
         .json() \
-        .get('response', {})[0]
+        .get('response', {})
     return info
 
 
@@ -100,3 +101,10 @@ def likes_for_post(post_id, owner_id):
                     owner_id=owner_id
             )
     )
+
+
+def paged_process(enum, page_size, process_page):
+    paginator = Paginator(enum, page_size)
+    for i in paginator.page_range:
+        page = paginator.page(i)
+        process_page(page.object_list)

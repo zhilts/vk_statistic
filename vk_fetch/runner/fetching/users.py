@@ -1,43 +1,31 @@
 import datetime
-from threading import Thread
 
 from django.db.models import F
 from django.utils import timezone
 
 from entities.models import VkUser, VkUserStatisticTotal, VkUserStatisticHourly, VkUserStatisticDaily, \
     VkUserStatisticWeekly
-from vk_api import get_user_info
+from vk_api import get_users_info, paged_process
 
 
-def fetch_user(user):
-    info = get_user_info(user.id)
-    user.first_name = info.get('first_name', None)
-    user.last_name = info.get('last_name', None)
-    user.photo_50 = info.get('photo_50', None)
-    user.save()
-    return user
-
-
-class FetchUser(Thread):
-    def __init__(self, user):
-        self.user = user
-        super(FetchUser, self).__init__()
-
-    def run(self):
-        fetch_user(self.user)
+def process_users_page(users_ids):
+    query = ','.join(map(str, users_ids))
+    for info in get_users_info(query):
+        VkUser.objects.update_or_create(
+                id=info.get('id'),
+                defaults=dict(
+                        first_name=info.get('first_name', None),
+                        last_name=info.get('last_name', None),
+                        photo_50=info.get('photo_50', None)
+                )
+        )
 
 
 def update_users_info():
-    threads = []
-    for user in VkUser.objects.all():
-        fetch_user(user)
-        # fixme: performance
-        # thread = FetchUser(user)
-        # thread.start()
-        # threads.append(thread)
-
-    for thread in threads:
-        thread.join()
+    user_ids_qs = VkUser.objects \
+        .values_list('id', flat=True) \
+        .order_by('id')
+    paged_process(user_ids_qs, 1000, process_users_page)
 
 
 def update_users_statistic(group):
