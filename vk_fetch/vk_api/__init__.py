@@ -14,12 +14,15 @@ base_iteration_request_pairs = base_request_pairs + (
 
 def safe_get(*args, **kwargs):
     count = 0
-    try:
-        return requests.get(*args, **kwargs)
-    except Exception as ex:
-        count += 1
-        if count > 10:
-            raise ex
+    exception = None
+    while count < 10:
+        try:
+            return requests.get(*args, **kwargs)
+        except Exception as ex:
+            count += 1
+            exception = ex
+
+    raise exception
 
 
 class VkAPI(object):
