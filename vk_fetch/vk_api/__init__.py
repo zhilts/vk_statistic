@@ -11,6 +11,16 @@ base_iteration_request_pairs = base_request_pairs + (
 )
 
 
+def safe_get(*args, **kwargs):
+    count = 0
+    try:
+        return requests.get(*args, **kwargs)
+    except Exception as ex:
+        count += 1
+        if count > 10:
+            raise ex
+
+
 class VkAPI(object):
     WALL_GET = 'wall.get'
     LIKES_GET_LIST = 'likes.getList'
@@ -29,8 +39,7 @@ def _bulk_vk_iterator(method, request_params=None):
     count = None
     while True:
         request['offset'] = offset
-        response = requests \
-            .get(url, params=request) \
+        response = safe_get(url, params=request) \
             .json() \
             .get('response', {})
 
@@ -58,8 +67,7 @@ def get_user_info(user_id):
                 ('fields', 'photo_50')
             )
     )
-    info = requests \
-        .get(url, params=request) \
+    info = safe_get(url, params=request) \
         .json() \
         .get('response', {})[0]
     return info
@@ -67,8 +75,7 @@ def get_user_info(user_id):
 
 def get_group_info(group_id):
     url = base_url.format(method_name=VkAPI.GROUP_INFO)
-    info = requests \
-        .get(url, params=dict(group_id=group_id)) \
+    info = safe_get(url, params=dict(group_id=group_id)) \
         .json() \
         .get('response', {})[0]
     return info
