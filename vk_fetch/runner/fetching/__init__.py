@@ -26,7 +26,6 @@ def timed(fn):
 
 @timed
 def process_all():
-    return
     for group in VkGroup.objects.filter(active=True):
         process_group(group)
     update_users_info()
