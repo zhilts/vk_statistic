@@ -10,7 +10,7 @@ def timed(fn):
         start = time.time()
         res = fn(*args, **kwargs)
         end = time.time()
-        return (res, end - start)
+        return (res, (end - start) / 60)
 
     return wrapper
 

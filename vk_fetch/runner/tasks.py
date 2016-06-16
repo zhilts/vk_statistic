@@ -7,4 +7,4 @@ from runner.fetching import process_all
 
 @shared_task
 def fetch_all():
-    return process_all()
+    return str(process_all())
