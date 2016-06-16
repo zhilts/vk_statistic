@@ -17,7 +17,10 @@ def safe_get(*args, **kwargs):
     exception = None
     while count < 10:
         try:
-            return requests.get(*args, **kwargs)
+            res = requests.get(*args, **kwargs)
+            if res is None:
+                raise ValueError('None response args={args}, kwargs={kwargs}'.format(args=args, kwargs=kwargs))
+            return res
         except Exception as ex:
             count += 1
             exception = ex
@@ -71,10 +74,14 @@ def get_users_info(user_id):
                 ('fields', 'photo_50')
             )
     )
-    info = safe_get(url, params=request) \
-        .json() \
-        .get('response', {})
-    return info
+    res = safe_get(url, params=request)
+    try:
+        info = res \
+            .json() \
+            .get('response', {})
+        return info
+    except:
+        raise Exception(res)
 
 
 def get_group_info(group_id):
