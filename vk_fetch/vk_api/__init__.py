@@ -17,9 +17,13 @@ def safe_get(*args, **kwargs):
     exception = None
     while count < 10:
         try:
-            res = requests.get(*args, **kwargs)
-            if res is None:
-                raise ValueError('None response args={args}, kwargs={kwargs}'.format(args=args, kwargs=kwargs))
+            try:
+                res = requests.get(*args, **kwargs)
+                res.json()
+            except Exception as ex:
+                raise ValueError(
+                        'response.json() error args={args}, kwargs={kwargs}, res={res}'.format(args=args, kwargs=kwargs,
+                                                                                               res=res)) from ex
             return res
         except Exception as ex:
             count += 1
