@@ -25,7 +25,7 @@ def update_users_info():
     user_ids_qs = VkUser.objects \
         .values_list('id', flat=True) \
         .order_by('id')
-    paged_process(user_ids_qs, process_users_page)
+    paged_process(user_ids_qs, process_users_page, page_size=1000)
 
 
 def update_users_statistic(group):
