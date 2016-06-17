@@ -12,18 +12,20 @@ base_iteration_request_pairs = base_request_pairs + (
 )
 
 
+class VkApiError(Exception):
+    pass
+
+
 def safe_get(*args, **kwargs):
     count = 0
     exception = None
     while count < 10:
         try:
-            try:
-                res = requests.get(*args, **kwargs)
-                res.json()
-            except Exception as ex:
-                raise ValueError(
-                        'response.json() error args={args}, kwargs={kwargs}, res={res}'.format(args=args, kwargs=kwargs,
-                                                                                               res=res)) from ex
+            res = requests.get(*args, **kwargs)
+            if res.status_code < 200 or res.status_code >= 400:
+                msg = 'response.get() error args={args}, kwargs={kwargs}, res={res}, status={}' \
+                    .format(args=args, kwargs=kwargs, res=res, status=res.status_code)
+                raise VkApiError(msg)
             return res
         except Exception as ex:
             count += 1
@@ -117,7 +119,7 @@ def likes_for_post(post_id, owner_id):
     )
 
 
-def paged_process(enum, page_size, process_page):
+def paged_process(enum, page_size=300, process_page=lambda _: None):
     paginator = Paginator(enum, page_size)
     for i in paginator.page_range:
         page = paginator.page(i)
