@@ -119,7 +119,7 @@ def likes_for_post(post_id, owner_id):
     )
 
 
-def paged_process(enum, page_size=300, process_page=lambda _: None):
+def paged_process(enum, process_page=lambda _: None, page_size=300):
     paginator = Paginator(enum, page_size)
     for i in paginator.page_range:
         page = paginator.page(i)
