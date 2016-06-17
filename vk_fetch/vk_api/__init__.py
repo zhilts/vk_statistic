@@ -23,7 +23,7 @@ def safe_get(*args, **kwargs):
         try:
             res = requests.get(*args, **kwargs)
             if res.status_code < 200 or res.status_code >= 400:
-                msg = 'response.get() error args={args}, kwargs={kwargs}, res={res}, status={}' \
+                msg = 'response.get() error args={args}, kwargs={kwargs}, res={res}, status={status}' \
                     .format(args=args, kwargs=kwargs, res=res, status=res.status_code)
                 raise VkApiError(msg)
             return res
