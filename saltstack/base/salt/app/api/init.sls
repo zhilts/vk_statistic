@@ -36,7 +36,7 @@ agent-pkgs:
 
 /etc/logrotate.d/nginx-agent:
   file.managed:
-    - source: salt://app/agent/files/agent.logrotate
+    - source: salt://app/api/files/agent.logrotate
     - user: root
     - group: root
     - mode: 0644

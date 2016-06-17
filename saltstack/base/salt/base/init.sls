@@ -1,7 +1,6 @@
 include:
   - .facts
 {% if grains['environment'] != 'local-dev' %}
-  - users.devops
   - users.engineering
   - collectd
   - .root-user
@@ -170,4 +169,10 @@ postfix:
     - enable: True
     - require:
       - pkg: postfix
+
+{% for group in ['wheel', 'vk-fetch'] %}
+{{group}}:
+  group.present:
+    - system: True
+{% endfor %}
 

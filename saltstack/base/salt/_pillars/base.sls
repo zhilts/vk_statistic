@@ -3,7 +3,6 @@
 ssh_users:
   engineering:
     - sergey.zhiltsov
-    - anna.djachenko
 
 sysctl:
   fs.file-max: 20000000

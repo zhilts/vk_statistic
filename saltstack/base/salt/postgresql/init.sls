@@ -125,7 +125,7 @@ vk-fetch postgres user:
       - service: postgresql
 
 {% for db in ['vk-fetch'] %}
-vk-fetch postgres db {{ db }}:
+database:
   postgres_database:
     - present
     - name: {{ db }}

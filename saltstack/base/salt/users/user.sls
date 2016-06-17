@@ -57,16 +57,6 @@ user:
     - group: root
     - mode: 0644
 
-/home/user/.pgpass:
-  file.managed:
-    - template: jinja
-    - source: salt://postgresql/files/user-pgpass
-    - user: user
-    - group: user
-    - mode: 0600
-    - require:
-      - user: user
-
 /home/user/supervisor:
   file.directory:
     - user: user

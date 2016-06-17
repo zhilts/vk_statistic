@@ -2,9 +2,13 @@ import re
 from fabric.api import settings
 from fabric.context_managers import lcd
 from fabric.decorators import task
-from fabric.operations import local
+from fabric.operations import local, put, run
+from fabric.state import env
 
 KEY_PATH_ENV = 'HEROKU_KEY'
+env.hosts = ['vk-aws']
+env.use_ssh_config = True
+env.roledefs = {}
 
 
 class Stashed(object):
@@ -117,3 +121,19 @@ def start_fetching():
 @task()
 def collectstatic():
     local('fab vk:"manage:\'collectstatic --noinput\'"')
+
+
+@task()
+def salt_update():
+    salt_pack = 'dist/salt.tgz'
+    local('tar -C saltstack/base -czf {salt_pack} salt'.format(salt_pack=salt_pack))
+    put(salt_pack, '/tmp/salt.tgz')
+    run('sudo rm -rf /srv/salt && sudo mkdir /srv/salt')
+    run('sudo tar zxf /tmp/salt.tgz -C /srv')
+    run('rm -rf /tmp/salt.tgz')
+    run('sudo salt-call --local state.highstate')
+
+
+@task()
+def deploy_aws():
+    salt_update()

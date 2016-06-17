@@ -1,1 +1,0 @@
-db.vk-fetch.com:5432:*:user:{{ pillar['db']['users']['user']['pw'] }}

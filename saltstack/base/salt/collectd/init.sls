@@ -21,6 +21,7 @@ collectd:
     - user: root
     - group: root
     - mode: 0644
+    - makedirs: True
     - require:
       - pkg: collectd
     - watch_in:
