@@ -22,6 +22,7 @@ def safe_get(*args, **kwargs):
     while count < 10:
         try:
             res = requests.get(*args, **kwargs)
+            print(res.url)
             if res.status_code < 200 or res.status_code >= 400:
                 msg = 'response.get() error args={args}, kwargs={kwargs}, res={res}, status={status}' \
                     .format(args=args, kwargs=kwargs, res=res, status=res.status_code)

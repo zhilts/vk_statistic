@@ -36,7 +36,7 @@ def update_users_statistic(group):
 
     for user in VkUser.objects.all():
         total_statistic, _ = VkUserStatisticTotal.objects.get_or_create(user=user, group=group)
-        new_likes = user.liked_posts.all().count()
+        new_likes = user.liked_posts.filter(group=group).count()
         delta_likes = new_likes - total_statistic.likes
 
         VkUserStatisticHourly.objects.get_or_create(user=user, group=group, timestamp=current_hour)
