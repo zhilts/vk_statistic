@@ -52,7 +52,7 @@ def _bulk_vk_iterator(method, request_params=None):
     count = None
     while True:
         request['offset'] = offset
-        response = safe_get(url, params=request) \
+        response = safe_get(url, data=request) \
             .json() \
             .get('response', {})
 
@@ -80,7 +80,7 @@ def get_users_info(user_id):
                 ('fields', 'photo_50')
             )
     )
-    res = safe_get(url, params=request)
+    res = safe_get(url, data=request)
     try:
         info = res \
             .json() \
@@ -92,7 +92,7 @@ def get_users_info(user_id):
 
 def get_group_info(group_id):
     url = base_url.format(method_name=VkAPI.GROUP_INFO)
-    info = safe_get(url, params=dict(group_id=group_id)) \
+    info = safe_get(url, data=dict(group_id=group_id)) \
         .json() \
         .get('response', {})[0]
     return info
