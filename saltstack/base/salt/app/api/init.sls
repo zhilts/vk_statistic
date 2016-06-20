@@ -12,9 +12,17 @@ agent-pkgs:
     - pkgs:
       - python3.4
       - python-virtualenv
+      - libpq-dev
       - gcc
       - python3-dev
       - libffi-dev
+
+/usr/run/vk-fetch/api:
+  file.directory:
+    - user: user
+    - group: vk-fetch
+    - mode: 0775
+    - makedirs: True
 
 {% if grains['environment'] != 'local-dev' %}
 /etc/nginx/conf.d/agent.conf:
@@ -42,9 +50,10 @@ agent-pkgs:
     - mode: 0644
 {% endif %}
 
-/etc/supervisord.d/api.ini:
+/etc/supervisor/conf.d/api.ini:
   file.managed:
     - source: salt://app/api/files/supervisor.ini
+    - template: jinja
     - user: root
     - group: root
     - mode: 0644

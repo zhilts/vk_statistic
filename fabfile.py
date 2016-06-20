@@ -1,6 +1,7 @@
-import re
+from datetime import datetime
+
 from fabric.api import settings
-from fabric.context_managers import lcd
+from fabric.context_managers import lcd, cd
 from fabric.decorators import task
 from fabric.operations import local, put, run
 from fabric.state import env
@@ -9,6 +10,7 @@ KEY_PATH_ENV = 'HEROKU_KEY'
 env.hosts = ['vk-aws']
 env.use_ssh_config = True
 env.roledefs = {}
+base_path = '/usr/run/vk-fetch/api'
 
 
 class Stashed(object):
@@ -66,7 +68,7 @@ def git_current_branch():
 
 
 @task()
-def deploy():
+def _deploy():
     start_branch = git_current_branch()
     with Stashed():
         checkout('master')
@@ -135,5 +137,39 @@ def salt_update():
 
 
 @task()
-def deploy_aws():
+def pack():
+    local('rm -rf dist/src.tgz')
+    local('tar -C vk_fetch -czf dist/src.tgz --exclude=env .')
+
+
+@task()
+def upload_src(version):
+    put('dist/src.tgz', '/tmp/src.tgz')
+    current_path = '{base_path}/releases/{current}'.format(base_path=base_path, current=version)
+    run('mkdir -p {path}'.format(path=current_path))
+    run('tar zxf /tmp/src.tgz -C {path}'.format(path=current_path))
+    run('rm -rf /tmp/src.tgz')
+    with cd(current_path):
+        run('./pysetup.sh')
+
+
+def move_link(version):
+    current_path = '{base_path}/releases/{current}'.format(base_path=base_path, current=version)
+    current_link = '{base_path}/current'.format(base_path=base_path, current=version)
+    run('rm -f {current_link}'.format(current_link=current_link))
+    run('ln -s {current_path} {current_link}'.format(current_path=current_path, current_link=current_link))
+    run('sudo supervisorctl update; sudo supervisorctl restart all')
+
+
+@task()
+def deploy(version=None):
+    version = version or datetime.now().strftime('%Y-%m-%d_%H-%M')
+    pack()
+    upload_src(version)
+    move_link(version)
+
+
+@task()
+def deploy_aws(version=None):
     salt_update()
+    deploy(version)

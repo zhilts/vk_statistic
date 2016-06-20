@@ -9,4 +9,4 @@ DATABASES['default'].update({
     'HOST': 'vk-fetch.cjovx6nrl7nk.us-west-2.rds.amazonaws.com'
 })
 
-BROKER_URL = os.environ.get('REDIS_URL')
+# BROKER_URL = os.environ.get('REDIS_URL')

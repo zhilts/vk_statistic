@@ -1,6 +1,6 @@
 supervisor:
-  pkg:
-    - latest
+  pkg.installed:
+    - version: 3.0b2-1
   service:
     - name: supervisor
     - running

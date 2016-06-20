@@ -125,35 +125,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s:: %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'handlers': {
-        'celery_log_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, "logs/celery.log"),
-            'formatter': 'verbose'
-        },
-    },
-    'loggers': {
-        'celery': {
-            'handlers': ['celery_log_file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}
-
 # CELERY
 BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
@@ -162,10 +133,3 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 import djcelery
 
 djcelery.setup_loader()
-try:
-    environ = os.environ['ENVIRONMENT']
-    module = __import__('settings.{environ}.settings'.format(environ=environ), globals(), locals(), ['*'])
-    for k in dir(module):
-        locals()[k] = getattr(module, k)
-except Exception as ex:
-    pass

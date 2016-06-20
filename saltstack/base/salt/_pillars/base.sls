@@ -4,6 +4,10 @@ ssh_users:
   engineering:
     - sergey.zhiltsov
 
+django_conf:
+  staging: settings.settings_staging
+  local-dev: settings.settings
+
 sysctl:
   fs.file-max: 20000000
   net.core.netdev_max_backlog: 65536

@@ -6,6 +6,14 @@ include:
   - .root-user
 {% endif %}
 
+
+ENVIRONMENT:
+  file.append:
+    - name: /etc/environment
+    - text:
+      - DJANGO_SETTINGS_MODULE={{ pillar['django_conf'][grains['environment']] }}
+      - ENVIRONMENT={{ grains['environment'] }}
+
 ## Hosts
 /etc/hosts:
   file.managed:
@@ -59,6 +67,7 @@ python-boto:
     - order: 1
     - require:
       - file: /root/.aws
+
 {% endif %}
 
 

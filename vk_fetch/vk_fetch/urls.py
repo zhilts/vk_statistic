@@ -19,6 +19,11 @@ from django.contrib import admin
 from entities.views import GroupListView, PostListView, UserListView, UserLikesListView
 from vk_fetch.views import main_view
 
+import logging
+
+logger = logging.getLogger()
+logger.info('works')
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^groups/$', GroupListView.as_view(), name='group-list'),
