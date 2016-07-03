@@ -25,7 +25,7 @@ agent-pkgs:
     - makedirs: True
 
 {% if grains['environment'] != 'local-dev' %}
-/etc/nginx/conf.d/agent.conf:
+/etc/nginx/conf.d/api.conf:
   file.managed:
     - source: salt://app/api/files/api.conf
     - template: jinja
@@ -35,7 +35,7 @@ agent-pkgs:
     - watch_in:
       - service: nginx
 
-/var/log/nginx/agent:
+/var/log/nginx/api:
   file.directory:
     - user: root
     - group: root

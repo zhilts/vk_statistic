@@ -41,6 +41,7 @@ def fact_grains():
     # Handle AWS Specific Facts
     if isAWS:
         # Gather basic ec2 info
+        grains['host'] = 'ec2-52-39-251-83.us-west-2.compute.amazonaws.com'
         grains['facts']['aws'] = {}
         grains['facts']['aws']['id'] = __runCommand("ec2metadata --instance-id")
         grains['facts']['aws']['type'] = __runCommand("ec2metadata --instance-type")
