@@ -71,24 +71,6 @@ def git_current_branch():
 
 
 @task()
-def _deploy():
-    start_branch = git_current_branch()
-    with Stashed():
-        checkout('master')
-
-        with settings(warn_only=True):
-            local('git remote add staging git@heroku.com:vk-fetch.git ')
-        local('git fetch origin')
-        local('git pull origin master')
-        local('git fetch staging')
-        local('git merge --log --no-edit release')
-        local('git push --force --set-upstream staging master:master')
-        local('heroku run fab migrate')
-        local('heroku run fab collectstatic')
-        checkout(start_branch)
-
-
-@task()
 def release_develop():
     start_branch = git_current_branch()
     with Stashed():
@@ -154,6 +136,7 @@ def upload_src(version):
     run('rm -rf /tmp/src.tgz')
     with cd(current_path):
         run('./pysetup.sh')
+        run('./pyenv.sh ./manage.py migrate --run-syncdb')
 
 
 def move_link(version):
@@ -165,7 +148,7 @@ def move_link(version):
 
 
 @task()
-def deploy(version=None):
+def deploy_src(version=None):
     version = version or datetime.now().strftime('%Y-%m-%d_%H-%M')
     pack()
     upload_src(version)
@@ -173,6 +156,6 @@ def deploy(version=None):
 
 
 @task()
-def deploy_aws(version=None):
+def deploy(version=None):
     salt_update()
-    deploy(version)
+    deploy_src(version)
