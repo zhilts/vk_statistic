@@ -39,7 +39,7 @@ class UserLikesListView(ListView):
 class UserTopTenView(ListView):
     def __init__(self, *args, **kwargs):
         super(UserTopTenView, self).__init__(*args, **kwargs)
-        self.template_name = 'entities/vkuserstatistictotal_list.html'
+        self.template_name = 'entities/top_ten.html'
 
     def get_queryset(self):
         viewer_id = self.request.GET.get('viewer_id', -1)
