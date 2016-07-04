@@ -1,5 +1,5 @@
 # Create your views here.
-from django.db.models import F, Value
+from django.db.models import F, Value, Case, When, BooleanField
 from django.db.models.functions import Concat
 from django.views.generic import ListView
 
@@ -38,11 +38,20 @@ class UserLikesListView(ListView):
 
 class UserTopTenView(ListView):
     def get_queryset(self):
+        self.template_name = 'entities/vkuserstatistictotal_list.html'
+        print(self.template_name)
+        viewer_id = self.request.GET.get('viewer_id', -1)
+
         group = VkGroup.objects.get(vk_id=self.kwargs.get('group_id'))
         qs = VkUserStatisticTotal.objects \
                  .select_related('user') \
                  .filter(group=group) \
+                 .annotate(current_user=Case(When(user_id=viewer_id, then=True),
+                                             default=False,
+                                             output_field=BooleanField())) \
                  .annotate(total_score=F('likes')) \
                  .annotate(screen_name=Concat('user__last_name', Value(' '), 'user__first_name')) \
-                 .order_by('-total_score', 'screen_name')[0:10]
-        return qs
+                 .order_by('-current_user', '-total_score', 'screen_name')[0:10]
+
+        sort = sorted(qs, key=lambda u: (-u.total_score, not u.current_user, u.screen_name))
+        return sort
