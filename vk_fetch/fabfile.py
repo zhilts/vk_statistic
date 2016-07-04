@@ -3,8 +3,8 @@ from fabric.operations import local
 
 
 @task()
-def pysetup():
-    local('./pysetup.sh')
+def pysetup(args=''):
+    local('./pysetup.sh {args}'.format(args=args))
 
 
 @task()

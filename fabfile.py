@@ -33,9 +33,12 @@ class Stashed(object):
 
 
 @task()
-def pysetup():
+def pysetup(args=None):
+    command = 'fab pysetup'
+    if args is not None:
+        command += ':{args}'.format(args=args)
     with lcd('./vk_fetch'):
-        local('fab pysetup')
+        local(command)
 
 
 @task()

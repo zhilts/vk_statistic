@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from entities.views import GroupListView, PostListView, UserListView, UserLikesListView
+from entities.views import GroupListView, PostListView, UserListView, UserLikesListView, UserTopTenView
 from vk_fetch.views import main_view
 
 import logging
@@ -32,5 +32,6 @@ urlpatterns = [
     url(r'^users/group/(?P<group_id>[0-9]+)/as/(?P<viewer_id>[0-9]*)/$', UserListView.as_view(),
         name='users-by-group-as-user'),
     url(r'^users/(?P<post_id>[0-9]+)/post/likes$', UserLikesListView.as_view(), name='likes-by-post'),
+    url(r'^top_ten/(?P<group_id>[0-9]+)/$', UserTopTenView.as_view(), name='top-ten'),
     url(r'^main$', main_view, name='main'),
 ]

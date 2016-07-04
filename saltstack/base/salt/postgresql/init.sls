@@ -121,6 +121,7 @@ vk-fetch postgres user:
     - present
     - name: user
     - password: {{ pillar['db']['users']['user']['pw'] }}
+    - createdb: True
     - require:
       - service: postgresql
 
