@@ -1,7 +1,7 @@
 from entities.models import VkPost
-from runner.fetching.users import update_users_statistic
 from runner.fetching.likes import fetch_likes
 from runner.fetching.posts import update_post
+from runner.fetching.statistic import update_users_statistic
 from vk_api import get_group_info, posts_for_group
 
 
