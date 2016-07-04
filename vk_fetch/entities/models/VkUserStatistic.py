@@ -34,5 +34,7 @@ class VkUserStatisticWeekly(VkUserStatisticBase):
 
 
 class VkUserStatisticTotal(VkUserStatisticBase):
+    total_score = models.IntegerField(default=0)
+
     class Meta:
         db_table = 'user_statistic_total'

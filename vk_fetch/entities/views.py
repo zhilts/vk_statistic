@@ -37,9 +37,11 @@ class UserLikesListView(ListView):
 
 
 class UserTopTenView(ListView):
-    def get_queryset(self):
+    def __init__(self, *args, **kwargs):
+        super(UserTopTenView, self).__init__(*args, **kwargs)
         self.template_name = 'entities/vkuserstatistictotal_list.html'
-        print(self.template_name)
+
+    def get_queryset(self):
         viewer_id = self.request.GET.get('viewer_id', -1)
 
         group = VkGroup.objects.get(vk_id=self.kwargs.get('group_id'))
@@ -49,7 +51,6 @@ class UserTopTenView(ListView):
                  .annotate(current_user=Case(When(user_id=viewer_id, then=True),
                                              default=False,
                                              output_field=BooleanField())) \
-                 .annotate(total_score=F('likes')) \
                  .annotate(screen_name=Concat('user__last_name', Value(' '), 'user__first_name')) \
                  .order_by('-current_user', '-total_score', 'screen_name')[0:10]
 

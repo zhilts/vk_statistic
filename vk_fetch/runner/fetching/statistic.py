@@ -30,4 +30,5 @@ def update_users_statistic(group):
             .update(likes=F('likes') + delta_likes)
 
         total_statistic.likes = new_likes
+        total_statistic.total_score = new_likes
         total_statistic.save()
