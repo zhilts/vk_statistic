@@ -52,7 +52,7 @@ class UserTopTenView(ListView):
                                              default=False,
                                              output_field=BooleanField())) \
                  .annotate(screen_name=Concat('user__last_name', Value(' '), 'user__first_name')) \
-                 .order_by('-current_user', '-total_score', 'screen_name')[0:10]
+                 .order_by('-current_user', 'rating', 'screen_name')[0:10]
 
-        sort = sorted(qs, key=lambda u: (-u.total_score, not u.current_user, u.screen_name))
+        sort = sorted(qs, key=lambda u: (u.rating, u.screen_name))
         return sort
