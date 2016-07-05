@@ -3,7 +3,7 @@
     {% for stats in object_list %}
     <li>
         <img src="{{ stats.user.photo_50 }}">
-        <a href="https://vk.com/id{{stats.user_id}}">{{ stats.screen_name }}</a>
+        <a href="https://vk.com/id{{stats.user_id}}">{{ stats.rating }}: {{ stats.screen_name }}</a>
         {{ stats.total_score }}: {{stats.likes}} likes
     </li>
     {% empty %}

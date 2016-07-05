@@ -1,6 +1,8 @@
 import datetime
 
-from django.db.models import F
+from celery import shared_task
+from django.db import connection
+from django.db.models import F, Count, Sum, Case, When, Q
 from django.utils import timezone
 
 from entities.models import VkUserStatisticTotal, VkUser, VkUserStatisticHourly, VkUserStatisticWeekly, \
@@ -30,5 +32,31 @@ def update_users_statistic(group):
             .update(likes=F('likes') + delta_likes)
 
         total_statistic.likes = new_likes
-        total_statistic.total_score = new_likes
         total_statistic.save()
+
+    update_total_score(group)
+    update_rating(group.pk)
+
+
+def update_total_score(group):
+    VkUserStatisticTotal.objects \
+        .filter(group=group) \
+        .update(total_score=F('likes'))
+
+
+def update_rating(group_id):
+    cursor = connection.cursor()
+    cursor.execute("""
+        UPDATE {table} t1
+        SET {rating_column} = (SELECT Count(*)
+                      FROM {table} t2
+                      WHERE t1.{total_score_column} < t2.{total_score_column} AND t2.{group_id_column} = {group_id})
+        WHERE {group_id_column} = {group_id};
+    """.format(
+            group_id=group_id,
+            table=VkUserStatisticTotal._meta.db_table,
+            total_score_column='total_score',
+            rating_column='rating',
+            group_id_column='group_id'
+            # score_column=VkUserStatisticTotal.total_score
+    ))
