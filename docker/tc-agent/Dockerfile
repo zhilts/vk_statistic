@@ -10,6 +10,7 @@ RUN wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 
 # SSH KEYGEN
 RUN ssh-keygen -b 1024 -C "teamcity agent" -t rsa -f ~/.ssh/id_rsa -N ''
+ADD ./ssh-config ~/.ssh/config
 
 # JAVA
 RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list \

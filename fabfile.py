@@ -9,7 +9,6 @@ from fabric.state import env
 KEY_PATH_ENV = 'HEROKU_KEY'
 env.hosts = ['vk-aws']
 env.use_ssh_config = True
-env.roledefs = {}
 base_path = '/usr/run/vk-fetch/api'
 
 
