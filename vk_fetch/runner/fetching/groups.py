@@ -1,6 +1,7 @@
 from entities.models import VkPost
 from runner.fetching.likes import fetch_likes
 from runner.fetching.posts import update_post
+from runner.fetching.reposts import fetch_reposts
 from runner.fetching.statistic import update_users_statistic
 from vk_api import get_group_info, posts_for_group
 
@@ -21,6 +22,7 @@ def process_group(group):
     for post_data in posts_for_group(group.domain):
         post = update_post(post_data, group)
         fetch_likes(post)
+        fetch_reposts(post)
         # fixme: performance
         # fetch_likes_thread = FetchLikes(post)
         # spawned_treads.append(fetch_likes_thread)
