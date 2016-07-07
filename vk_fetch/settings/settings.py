@@ -133,3 +133,38 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 import djcelery
 
 djcelery.setup_loader()
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s',
+            'datefmt': '%y %b %d, %H:%M:%S',
+        },
+        'standard': {
+            'format': '[%(asctime)s: %(levelname)s/%(module)s.%(funcName)s:%(lineno)s] %(message)s',
+            # 'datefmt': '%m-%d-%Y %H:%M:%S'
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'celery': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/celery.log',
+            'formatter': 'standard',
+            'maxBytes': 1024 * 1024 * 100,  # 100 mb
+        },
+    },
+    'loggers': {
+        'runner.tasks': {
+            'handlers': ['celery', 'console'],
+            'level': 'DEBUG',
+        },
+    }
+}
