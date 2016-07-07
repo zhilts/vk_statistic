@@ -59,7 +59,7 @@ def update_rating(group_id):
     cursor = connection.cursor()
     cursor.execute("""
         UPDATE {table} t1
-        SET {rating_column} = (SELECT Count(*)
+        SET {rating_column} = 1 + (SELECT Count(*)
                       FROM {table} t2
                       WHERE t1.{total_score_column} < t2.{total_score_column} AND t2.{group_id_column} = {group_id})
         WHERE {group_id_column} = {group_id};

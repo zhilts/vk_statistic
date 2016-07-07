@@ -1,12 +1,37 @@
 <h1>Top 10</h1>
-<ul>
+<table border="1">
+    <thead>
+    <th>Avatar</th>
+    <th>Name</th>
+    <th>Rating</th>
+    <th>Total Score</th>
+    <th>Likes</th>
+    <th>Reposts</th>
+    <th>Likes for Reposts</th>
+    <th>Reposts for Reposts</th>
+    </thead>
+    <tbody>
     {% for stats in object_list %}
-    <li>
-        <img src="{{ stats.user.photo_50 }}">
-        <a href="https://vk.com/id{{stats.user_id}}">{{ stats.rating }}: {{ stats.screen_name }}</a>
-        {{ stats.total_score }}: {{stats.likes}} likes
-    </li>
+        <tr
+                {% if stats.current_user %}
+                    style="font-weight: bold;"
+                {% endif %}
+        >
+            <td><img src="{{ stats.user.photo_50 }}"></td>
+            <td><a href="https://vk.com/id{{ stats.user_id }}">{{ stats.screen_name }}</a></td>
+            <td>{{ stats.rating }}</td>
+            <td>{{ stats.total_score }}</td>
+            <td>{{ stats.likes }}</td>
+            <td>{{ stats.reposts }}</td>
+            <td>{{ stats.likes_for_reposts }}</td>
+            <td>{{ stats.reposts_for_reposts }}</td>
+        </tr>
     {% empty %}
-    <li>No articles yet.</li>
+        <tr>
+            <td>No articles yet.</td>
+        </tr>
     {% endfor %}
-</ul>
+
+
+    </tbody>
+</table>
