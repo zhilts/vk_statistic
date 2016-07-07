@@ -3,6 +3,7 @@
 ssh_users:
   engineering:
     - sergey.zhiltsov
+    - teamcity
 
 django_conf:
   staging: settings.settings_staging

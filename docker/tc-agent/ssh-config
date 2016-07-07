@@ -2,4 +2,4 @@ Host vk-aws
     HostName ec2-52-39-251-83.us-west-2.compute.amazonaws.com
     IdentityFile ~/.ssh/id_rsa
     StrictHostKeyChecking no
-    User user
+    User teamcity
