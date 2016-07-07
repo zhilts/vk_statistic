@@ -17,7 +17,7 @@ agent-pkgs:
       - python3-dev
       - libffi-dev
 
-/usr/run/vk-fetch/api:
+/usr/run/vk-fetch/api/releases:
   file.directory:
     - user: user
     - group: vk-fetch
