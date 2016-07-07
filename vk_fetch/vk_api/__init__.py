@@ -39,6 +39,7 @@ class VkAPI(object):
     LIKES_GET_LIST = 'likes.getList'
     GROUP_INFO = 'groups.getById'
     USERS_GET = 'users.get'
+    REPOSTS_GET_LIST = 'wall.getReposts'
 
 
 def _bulk_vk_iterator(method, request_params=None):
@@ -124,3 +125,15 @@ def paged_process(enum, process_page=lambda _: None, page_size=300):
     for i in paginator.page_range:
         page = paginator.page(i)
         process_page(page.object_list)
+
+
+# reposts_for_post
+
+def reposts_for_post(post_id, owner_id):
+    return _vk_iterator(
+            VkAPI.REPOSTS_GET_LIST,
+            dict(
+                    post_id=post_id,
+                    owner_id=owner_id
+            )
+    )
