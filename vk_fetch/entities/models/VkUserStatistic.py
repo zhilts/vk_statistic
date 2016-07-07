@@ -7,6 +7,9 @@ class VkUserStatisticBase(models.Model):
     group = models.ForeignKey(VkGroup, null=False)
     user = models.ForeignKey(VkUser, null=False)
     likes = models.IntegerField(default=0)
+    reposts = models.IntegerField(default=0)
+    likes_for_reposts = models.IntegerField(default=0)
+    reposts_for_reposts = models.IntegerField(default=0)
 
     class Meta:
         abstract = True

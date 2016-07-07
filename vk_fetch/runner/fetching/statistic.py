@@ -1,8 +1,7 @@
 import datetime
 
-from celery import shared_task
 from django.db import connection
-from django.db.models import F, Count, Sum, Case, When, Q
+from django.db.models import F, Sum
 from django.utils import timezone
 
 from entities.models import VkUserStatisticTotal, VkUser, VkUserStatisticHourly, VkUserStatisticWeekly, \
@@ -15,24 +14,36 @@ def update_users_statistic(group):
     current_date = current_hour.replace(hour=0)
     current_week = current_date - datetime.timedelta(days=current_date.weekday())
 
+    def get_sum(s, column):
+        return s.aggregate(sum=Sum(column)).get('sum') or 0
+
     for user in VkUser.objects.all():
         total_statistic, _ = VkUserStatisticTotal.objects.get_or_create(user=user, group=group)
+
         new_likes = user.liked_posts.filter(group=group).count()
+        new_reposts = user.vkrepost_set.count()
+        new_likes_for_reposts = get_sum(user.vkrepost_set, 'likes')
+        new_reposts_for_reposts = get_sum(user.vkrepost_set, 'reposts')
+
         delta_likes = new_likes - total_statistic.likes
+        delta_reposts = new_reposts - total_statistic.reposts
+        delta_likes_for_reposts = new_likes_for_reposts - total_statistic.likes_for_reposts
+        delta_reposts_for_reposts = new_reposts_for_reposts - total_statistic.reposts_for_reposts
 
         VkUserStatisticHourly.objects.get_or_create(user=user, group=group, timestamp=current_hour)
         VkUserStatisticDaily.objects.get_or_create(user=user, group=group, date=current_date)
         VkUserStatisticWeekly.objects.get_or_create(user=user, group=group, week=current_week)
 
-        VkUserStatisticHourly.objects.filter(user=user, group=group, timestamp=current_hour) \
-            .update(likes=F('likes') + delta_likes)
-        VkUserStatisticDaily.objects.filter(user=user, group=group, date=current_date) \
-            .update(likes=F('likes') + delta_likes)
-        VkUserStatisticWeekly.objects.filter(user=user, group=group, week=current_week) \
-            .update(likes=F('likes') + delta_likes)
-
-        total_statistic.likes = new_likes
-        total_statistic.save()
+        update = dict(
+                likes=F('likes') + delta_likes,
+                reposts=F('reposts') + delta_reposts,
+                likes_for_reposts=F('likes_for_reposts') + delta_likes_for_reposts,
+                reposts_for_reposts=F('reposts_for_reposts') + delta_reposts_for_reposts
+        )
+        VkUserStatisticHourly.objects.filter(user=user, group=group, timestamp=current_hour).update(**update)
+        VkUserStatisticDaily.objects.filter(user=user, group=group, date=current_date).update(**update)
+        VkUserStatisticWeekly.objects.filter(user=user, group=group, week=current_week).update(**update)
+        VkUserStatisticTotal.objects.filter(user=user, group=group).update(**update)
 
     update_total_score(group)
     update_rating(group.pk)
@@ -41,7 +52,7 @@ def update_users_statistic(group):
 def update_total_score(group):
     VkUserStatisticTotal.objects \
         .filter(group=group) \
-        .update(total_score=F('likes'))
+        .update(total_score=F('likes') + F('reposts') + F('likes_for_reposts') + F('reposts_for_reposts'))
 
 
 def update_rating(group_id):
