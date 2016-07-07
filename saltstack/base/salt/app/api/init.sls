@@ -59,8 +59,4 @@ agent-pkgs:
     - mode: 0644
     - makedirs: True
 
-/var/log/user/api:
-  file.symlink:
-    - target: /home/user/logs
-
 {% endif %}
