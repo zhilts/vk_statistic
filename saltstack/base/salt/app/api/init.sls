@@ -61,10 +61,13 @@ agent-pkgs:
 
 {% endif %}
 
-/etc/nginx/ssl/verify.html:
+
+{% for file in ['verify.html','karma-social.com_bundle.crt','karma-social.com.key'] %}
+/etc/nginx/ssl/{{ file }}:
   file.managed:
-    - source: salt://app/api/files/verify.html
+    - source: salt://app/api/files/{{ file }}
     - user: root
     - group: root
     - mode: 0644
     - makedirs: True
+{% endfor %}
