@@ -60,3 +60,11 @@ agent-pkgs:
     - makedirs: True
 
 {% endif %}
+
+/etc/nginx/ssl/verify.html:
+  file.managed:
+    - source: salt://app/api/files/verify.html
+    - user: root
+    - group: root
+    - mode: 0644
+    - makedirs: True
