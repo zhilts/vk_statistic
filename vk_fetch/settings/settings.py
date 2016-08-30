@@ -80,7 +80,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'vk-fetch',
         'USER': 'user',
-        'PASSWORD': ''
+        'PASSWORD': 'user123',
+        'HOST': 'localhost'
     }
 }
 
