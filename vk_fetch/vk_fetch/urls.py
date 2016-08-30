@@ -26,6 +26,7 @@ logger.info('works')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', GroupListView.as_view(), name='index'),
     url(r'^groups/$', GroupListView.as_view(), name='group-list'),
     url(r'^posts/(?P<group_id>[0-9]+)/$', PostListView.as_view(), name='post-list'),
     url(r'^users/group/(?P<group_id>[0-9]+)/$', UserListView.as_view(), name='users-by-group'),
