@@ -4,10 +4,6 @@ RUN apt-get update
 RUN apt-get install -y wget unzip git python-setuptools gcc python-dev
 RUN easy_install Fabric3
 
-# HEROKU
-RUN wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-
-
 # SSH KEYGEN
 RUN ssh-keygen -b 1024 -C "teamcity agent" -t rsa -f ~/.ssh/id_rsa -N ''
 ADD ./ssh-config ~/.ssh/config
