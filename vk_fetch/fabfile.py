@@ -37,6 +37,11 @@ def celery_beat():
     celery('beat')
 
 
+@task(alias='mkm')
+def make_migrations():
+    manage('makemigrations')
+
+
 @task()
 def migrate():
     manage('migrate --run-syncdb')

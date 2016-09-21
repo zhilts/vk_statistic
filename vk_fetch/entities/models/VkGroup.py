@@ -2,7 +2,7 @@ from django.db import models
 
 
 class VkGroup(models.Model):
-    vk_id = models.IntegerField(null=True)
+    vk_id = models.IntegerField(null=False)
     domain = models.CharField(max_length=150)
     active = models.BooleanField(null=False, default=True)
 

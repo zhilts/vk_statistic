@@ -8,7 +8,6 @@ from vk_api import get_group_info, posts_for_group
 
 def update_group_info(group):
     group_info = get_group_info(group.domain)
-    group.name = group_info.get('name', None)
     group.vk_id = group_info.get('gid', None)
     group.save()
     return group

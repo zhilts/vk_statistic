@@ -3,6 +3,7 @@
     "model": "entities.vkgroup",
     "pk": 1,
     "fields": {
+      "vk_id": 33081221,
       "domain": "de_lord"
     }
   }

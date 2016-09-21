@@ -7,6 +7,8 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 
 from entities.models import VkGroup
+from entities.models import VkUser
+from entities.models.VkInvitation import VkInvitation
 from runner.fetching import process_group, process_all
 from vk_fetch.celery import app
 
@@ -52,3 +54,14 @@ def update_users():
     args = ()
     logger.debug('started with args={args}'.format(args=args))
     logger.debug('finished with args={args}'.format(args=args))
+
+
+@app.task()
+def add_invite(group_id, user_id, viewer_id):
+    viewer, _ = VkUser.objects.get_or_create(pk=viewer_id)
+    invited_by, _ = VkUser.objects.get_or_create(pk=user_id)
+    group = VkGroup.objects.get(vk_id=group_id)
+    try:
+        VkInvitation.objects.create(group=group, user=viewer, invited_by=invited_by)
+    except Exception as ex:
+        logger.debug('invitation failed {err}'.format(err=ex))

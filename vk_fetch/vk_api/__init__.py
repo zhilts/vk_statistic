@@ -1,5 +1,13 @@
+import json
+
 import requests
 from django.core.paginator import Paginator
+
+try:
+    import httplib
+except ImportError:
+    import http.client as httplib
+httplib.HTTPConnection.debuglevel = 0
 
 base_url = 'https://api.vk.com/method/{method_name}'
 paging = 100
@@ -61,6 +69,9 @@ def _bulk_vk_iterator(method, request_params=None):
 
         offset += paging
         count = count or response.get('count', 0)
+        if items is None:
+            print(url, request)
+            raise Exception
         yield items
 
         if offset >= count:
@@ -69,6 +80,7 @@ def _bulk_vk_iterator(method, request_params=None):
 
 def _vk_iterator(method, parameters):
     for page in _bulk_vk_iterator(method, parameters):
+        # print(method, parameters, json.dumps(page))
         for item in page:
             yield item
 
@@ -76,10 +88,10 @@ def _vk_iterator(method, parameters):
 def get_users_info(user_id):
     url = base_url.format(method_name=VkAPI.USERS_GET)
     request = dict(
-            base_request_pairs + (
-                ('user_ids', user_id),
-                ('fields', 'photo_50')
-            )
+        base_request_pairs + (
+            ('user_ids', user_id),
+            ('fields', 'photo_50')
+        )
     )
     res = safe_get(url, data=request)
     try:
@@ -101,22 +113,22 @@ def get_group_info(group_id):
 
 def posts_for_group(group_domain):
     return _vk_iterator(
-            VkAPI.WALL_GET,
-            dict(
-                    domain=group_domain,
-                    filter='all'
-            )
+        VkAPI.WALL_GET,
+        dict(
+            domain=group_domain,
+            filter='all'
+        )
     )
 
 
 def likes_for_post(post_id, owner_id):
     return _vk_iterator(
-            VkAPI.LIKES_GET_LIST,
-            dict(
-                    type='post',
-                    item_id=post_id,
-                    owner_id=owner_id
-            )
+        VkAPI.LIKES_GET_LIST,
+        dict(
+            type='post',
+            item_id=post_id,
+            owner_id=owner_id
+        )
     )
 
 
@@ -131,9 +143,9 @@ def paged_process(enum, process_page=lambda _: None, page_size=300):
 
 def reposts_for_post(post_id, owner_id):
     return _vk_iterator(
-            VkAPI.REPOSTS_GET_LIST,
-            dict(
-                    post_id=post_id,
-                    owner_id=owner_id
-            )
+        VkAPI.REPOSTS_GET_LIST,
+        dict(
+            post_id=post_id,
+            owner_id=owner_id
+        )
     )

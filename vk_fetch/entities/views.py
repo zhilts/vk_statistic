@@ -4,6 +4,7 @@ from django.db.models.functions import Concat
 from django.views.generic import ListView
 
 from entities.models import VkGroup, VkPost, VkUser, VkUserStatisticTotal
+from runner.tasks import add_invite
 
 
 class GroupListView(ListView):
@@ -41,8 +42,16 @@ class UserTopTenView(ListView):
         super(UserTopTenView, self).__init__(*args, **kwargs)
         self.template_name = 'entities/top_ten.html'
 
+    def update_invites(self, viewer_id, params):
+        referrer = params.get('referrer', '')
+        if referrer == 'request':
+            user_id = int(params.get('user_id'))
+            group_id = self.kwargs.get('group_id')
+            add_invite.delay(group_id=group_id, viewer_id=viewer_id, user_id=user_id)
+
     def get_queryset(self):
         viewer_id = self.request.GET.get('viewer_id', -1)
+        self.update_invites(viewer_id, self.request.GET)
 
         group = VkGroup.objects.get(vk_id=self.kwargs.get('group_id'))
         qs = VkUserStatisticTotal.objects \

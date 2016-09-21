@@ -1,8 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
-from entities.views import UserListView
-
 
 def main_user(user_id, viewer_id):
     # todo: TBD
