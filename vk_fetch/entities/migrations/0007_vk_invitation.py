@@ -17,8 +17,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='entities.VkGroup')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='entities.VkUser')),
-                ('invited_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='entities.VkUser')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='entities.VkUser',
+                                           related_name='invited_with')),
+                ('invited_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='entities.VkUser',
+                                                 related_name='invitations')),
                 ('date', models.DateTimeField(auto_now=True)),
             ],
             options={

@@ -9,6 +9,7 @@
     <th>Reposts</th>
     <th>Likes for Reposts</th>
     <th>Reposts for Reposts</th>
+    <th>Invited</th>
     </thead>
     <tbody>
     {% for stats in object_list %}
@@ -25,6 +26,7 @@
             <td>{{ stats.reposts }}</td>
             <td>{{ stats.likes_for_reposts }}</td>
             <td>{{ stats.reposts_for_reposts }}</td>
+            <td>{{ stats.invites }}</td>
         </tr>
     {% empty %}
         <tr>

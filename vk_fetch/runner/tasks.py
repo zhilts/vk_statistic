@@ -13,7 +13,6 @@ from runner.fetching import process_group, process_all
 from vk_fetch.celery import app
 
 logger = get_task_logger(__name__)
-print(__name__)
 
 dictConfig(settings.LOGGING)
 
@@ -58,6 +57,8 @@ def update_users():
 
 @app.task()
 def add_invite(group_id, user_id, viewer_id):
+    if user_id == viewer_id:
+        return
     viewer, _ = VkUser.objects.get_or_create(pk=viewer_id)
     invited_by, _ = VkUser.objects.get_or_create(pk=user_id)
     group = VkGroup.objects.get(vk_id=group_id)

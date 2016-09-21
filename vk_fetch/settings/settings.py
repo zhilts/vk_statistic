@@ -164,7 +164,7 @@ LOGGING = {
     'loggers': {
         'runner.tasks': {
             'handlers': ['celery', 'console'],
-            'level': 'DEBUG',
+            'level': 'WARNING',
         },
     }
 }

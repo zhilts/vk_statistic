@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from entities.models import VkUserStatisticTotal, VkUser, VkUserStatisticHourly, VkUserStatisticWeekly, \
     VkUserStatisticDaily
+from entities.models.VkInvitation import VkInvitation
 
 
 def update_users_statistic(group):
@@ -24,21 +25,24 @@ def update_users_statistic(group):
         new_reposts = user.vkrepost_set.count()
         new_likes_for_reposts = get_sum(user.vkrepost_set, 'likes')
         new_reposts_for_reposts = get_sum(user.vkrepost_set, 'reposts')
+        new_invites = VkInvitation.objects.filter(group=group, invited_by=user).count()
 
         delta_likes = new_likes - total_statistic.likes
         delta_reposts = new_reposts - total_statistic.reposts
         delta_likes_for_reposts = new_likes_for_reposts - total_statistic.likes_for_reposts
         delta_reposts_for_reposts = new_reposts_for_reposts - total_statistic.reposts_for_reposts
+        delta_invites = new_invites - total_statistic.invites
 
         VkUserStatisticHourly.objects.get_or_create(user=user, group=group, timestamp=current_hour)
         VkUserStatisticDaily.objects.get_or_create(user=user, group=group, date=current_date)
         VkUserStatisticWeekly.objects.get_or_create(user=user, group=group, week=current_week)
 
         update = dict(
-                likes=F('likes') + delta_likes,
-                reposts=F('reposts') + delta_reposts,
-                likes_for_reposts=F('likes_for_reposts') + delta_likes_for_reposts,
-                reposts_for_reposts=F('reposts_for_reposts') + delta_reposts_for_reposts
+            likes=F('likes') + delta_likes,
+            reposts=F('reposts') + delta_reposts,
+            likes_for_reposts=F('likes_for_reposts') + delta_likes_for_reposts,
+            reposts_for_reposts=F('reposts_for_reposts') + delta_reposts_for_reposts,
+            invites=F('invites') + delta_invites
         )
         VkUserStatisticHourly.objects.filter(user=user, group=group, timestamp=current_hour).update(**update)
         VkUserStatisticDaily.objects.filter(user=user, group=group, date=current_date).update(**update)
@@ -52,7 +56,8 @@ def update_users_statistic(group):
 def update_total_score(group):
     VkUserStatisticTotal.objects \
         .filter(group=group) \
-        .update(total_score=F('likes') + F('reposts') + F('likes_for_reposts') + F('reposts_for_reposts'))
+        .update(total_score=F('likes') + F('reposts') + F('likes_for_reposts') + F('reposts_for_reposts') + F('invites')
+                )
 
 
 def update_rating(group_id):
@@ -64,10 +69,10 @@ def update_rating(group_id):
                       WHERE t1.{total_score_column} < t2.{total_score_column} AND t2.{group_id_column} = {group_id})
         WHERE {group_id_column} = {group_id};
     """.format(
-            group_id=group_id,
-            table=VkUserStatisticTotal._meta.db_table,
-            total_score_column='total_score',
-            rating_column='rating',
-            group_id_column='group_id'
-            # score_column=VkUserStatisticTotal.total_score
+        group_id=group_id,
+        table=VkUserStatisticTotal._meta.db_table,
+        total_score_column='total_score',
+        rating_column='rating',
+        group_id_column='group_id'
+        # score_column=VkUserStatisticTotal.total_score
     ))

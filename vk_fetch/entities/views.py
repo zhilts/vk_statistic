@@ -50,7 +50,7 @@ class UserTopTenView(ListView):
             add_invite.delay(group_id=group_id, viewer_id=viewer_id, user_id=user_id)
 
     def get_queryset(self):
-        viewer_id = self.request.GET.get('viewer_id', -1)
+        viewer_id = int(self.request.GET.get('viewer_id', -1))
         self.update_invites(viewer_id, self.request.GET)
 
         group = VkGroup.objects.get(vk_id=self.kwargs.get('group_id'))

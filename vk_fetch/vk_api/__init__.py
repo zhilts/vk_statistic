@@ -70,7 +70,6 @@ def _bulk_vk_iterator(method, request_params=None):
         offset += paging
         count = count or response.get('count', 0)
         if items is None:
-            print(url, request)
             raise Exception
         yield items
 
