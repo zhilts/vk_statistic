@@ -14,8 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.conf.urls.static import static
 from django.contrib import admin
 
+from django.conf import settings
 from entities.views import GroupListView, PostListView, UserListView, UserLikesListView, UserTopTenView
 from vk_fetch.views import main_view
 
@@ -36,3 +38,7 @@ urlpatterns = [
     url(r'^top_ten/(?P<group_id>[0-9]+)/$', UserTopTenView.as_view(), name='top-ten'),
     url(r'^main$', main_view, name='main'),
 ]
+
+print(settings.STATIC_URL, settings.STATIC_ROOT)
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

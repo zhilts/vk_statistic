@@ -136,6 +136,7 @@ def upload_src(version):
     with cd(current_path):
         run('./pysetup.sh')
         run('./pyenv.sh ./manage.py migrate --run-syncdb')
+        run('./pyenv.sh ./manage.py collectstatic --noinput')
 
 
 def move_link(version):

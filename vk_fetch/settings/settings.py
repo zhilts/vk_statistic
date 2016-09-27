@@ -123,6 +123,10 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "assets"),
+)
+
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # CELERY
@@ -166,5 +170,9 @@ LOGGING = {
             'handlers': ['celery', 'console'],
             'level': 'WARNING',
         },
+        'django.views.static.serve': {
+            'handlers': ['celery', 'console'],
+            'level': 'DEBUG',
+        }
     }
 }
