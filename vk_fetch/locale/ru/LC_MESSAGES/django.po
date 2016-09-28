@@ -1,0 +1,65 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-28 20:03+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: entities/templates/entities/top_ten.html:13
+msgid "Rating"
+msgstr "Место"
+
+#: entities/templates/entities/top_ten.html:14
+msgid "Karma"
+msgstr "Карма"
+
+#: entities/templates/entities/top_ten.html:15
+msgid "Avatar"
+msgstr "Аватар"
+
+#: entities/templates/entities/top_ten.html:16
+msgid "Name"
+msgstr "Имя"
+
+#: entities/templates/entities/top_ten.html:17
+msgid "Likes"
+msgstr "Лайки"
+
+#: entities/templates/entities/top_ten.html:18
+msgid "Reposts"
+msgstr "Репосты"
+
+#: entities/templates/entities/top_ten.html:19
+msgid "Likes for Reposts"
+msgstr "Лайки репостов"
+
+#: entities/templates/entities/top_ten.html:20
+msgid "Reposts for Reposts"
+msgstr "Репосты репостов"
+
+#: entities/templates/entities/top_ten.html:21
+msgid "Invited"
+msgstr "Приглашения"
+
+#: settings/settings.py:116
+msgid "English"
+msgstr "Английский"
+
+#: settings/settings.py:117
+msgid "Russian"
+msgstr "Русский"

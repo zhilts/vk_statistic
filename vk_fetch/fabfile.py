@@ -1,5 +1,21 @@
+import os
+from contextlib import contextmanager
+
+import posixpath
+from fabric.context_managers import prefix, shell_env
 from fabric.decorators import task
 from fabric.operations import local
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.settings")
+
+
+@contextmanager
+def virtualenv(path='./env'):
+    activate = posixpath.join(path, 'bin/activate')
+    if not posixpath.exists(activate):
+        raise OSError("Cannot activate virtualenv %s" % path)
+    with prefix('. %s' % activate):
+        yield
 
 
 @task()
@@ -45,6 +61,18 @@ def make_migrations():
 @task()
 def migrate():
     manage('migrate --run-syncdb')
+
+
+@task(alias='msgm')
+def make_messages(args='-l ru'):
+    with virtualenv():
+        local('./manage.py makemessages --ignore\=env {}'.format(args))
+
+
+@task(alias='msgc')
+def compile_messages(args='--locale\=ru'):
+    with virtualenv():
+        local('./manage.py compilemessages {}'.format(args))
 
 
 @task(alias='rdb')
