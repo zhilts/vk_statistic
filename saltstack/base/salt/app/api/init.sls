@@ -10,6 +10,7 @@ agent-pkgs:
   pkg:
     - latest
     - pkgs:
+      - gettext
       - python3.4
       - python-virtualenv
       - libpq-dev

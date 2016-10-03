@@ -123,6 +123,7 @@ def salt_update():
 @task()
 def pack():
     local('rm -rf dist/src.tgz')
+    # vk('msgc')
     local('tar -C vk_fetch -czf dist/src.tgz --exclude=env .')
 
 
@@ -137,6 +138,7 @@ def upload_src(version):
         run('./pysetup.sh')
         run('./pyenv.sh ./manage.py migrate --run-syncdb')
         run('./pyenv.sh ./manage.py collectstatic --noinput')
+        run('fab msgc')
 
 
 def move_link(version):
