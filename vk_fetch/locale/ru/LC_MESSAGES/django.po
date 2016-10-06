@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-28 20:03+0000\n"
+"POT-Creation-Date: 2016-10-04 10:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,45 +21,48 @@ msgstr ""
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: entities/templates/entities/top_ten.html:13
+msgid "Total"
+msgstr "Общая"
+
+#: entities/templates/entities/top_ten.html:18
+msgid "Last 3 days"
+msgstr "За 3 дня"
+
+#: entities/templates/entities/top_ten.html:25
 msgid "Rating"
 msgstr "Место"
 
-#: entities/templates/entities/top_ten.html:14
+#: entities/templates/entities/top_ten.html:26
 msgid "Karma"
 msgstr "Карма"
 
-#: entities/templates/entities/top_ten.html:15
+#: entities/templates/entities/top_ten.html:27
 msgid "Avatar"
 msgstr "Аватар"
 
-#: entities/templates/entities/top_ten.html:16
+#: entities/templates/entities/top_ten.html:28
 msgid "Name"
 msgstr "Имя"
 
-#: entities/templates/entities/top_ten.html:17
-msgid "Likes"
-msgstr "Лайки"
-
-#: entities/templates/entities/top_ten.html:18
-msgid "Reposts"
-msgstr "Репосты"
-
-#: entities/templates/entities/top_ten.html:19
-msgid "Likes for Reposts"
-msgstr "Лайки репостов"
-
-#: entities/templates/entities/top_ten.html:20
-msgid "Reposts for Reposts"
-msgstr "Репосты репостов"
-
-#: entities/templates/entities/top_ten.html:21
-msgid "Invited"
-msgstr "Приглашения"
-
-#: settings/settings.py:116
+#: settings/settings.py:115
 msgid "English"
 msgstr "Английский"
 
-#: settings/settings.py:117
+#: settings/settings.py:116
 msgid "Russian"
 msgstr "Русский"
+
+#~ msgid "Likes"
+#~ msgstr "Лайки"
+
+#~ msgid "Reposts"
+#~ msgstr "Репосты"
+
+#~ msgid "Likes for Reposts"
+#~ msgstr "Лайки репостов"
+
+#~ msgid "Reposts for Reposts"
+#~ msgstr "Репосты репостов"
+
+#~ msgid "Invited"
+#~ msgstr "Приглашения"

@@ -3,11 +3,14 @@
     {% for group in object_list %}
         <li>{{ group.domain }}
             {% if group.vk_id %}
-                <a href="{% url 'post-list' group_id=group.vk_id %}">posts</a></li>
-                <a href="{% url 'users-by-group' group_id=group.vk_id %}">users</a></li>
+                <a href="{% url 'post-list' group_id=group.vk_id %}">posts</a>
+                <a href="{% url 'users-by-group' group_id=group.vk_id %}">users</a>
+                <a href="{% url 'top-ten' group_id=group.vk_id %}">top ten</a>
+                <a href="{% url 'group-periods' group_id=group.vk_id %}">periods</a>
             {% else %}
                 Not loaded yet
             {% endif %}
+        </li>
     {% empty %}
         <li>No articles yet.</li>
     {% endfor %}

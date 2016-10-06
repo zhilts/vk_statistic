@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="{% static "top10.css" %}">
 </head>
 <body>
+<div class="context">
+    <a href="{% url 'top-ten' group_id %}">
+        <button>
+            {% trans 'Total' %}
+        </button>
+    </a>
+    <a href="{% url 'top-ten-period-current' group_id %}">
+        <button>
+            {% trans 'Last 3 days' %}
+        </button>
+    </a>
+</div>
 <div class="sticky-wrap">
     <table border="1">
         <thead>
@@ -14,28 +26,18 @@
         <th>{% trans 'Karma' %}</th>
         <th>{% trans 'Avatar' %}</th>
         <th>{% trans 'Name' %}</th>
-        <th>{% trans 'Likes' %}</th>
-        <th>{% trans 'Reposts' %}</th>
-        <th>{% trans 'Likes for Reposts' %}</th>
-        <th>{% trans 'Reposts for Reposts' %}</th>
-        <th>{% trans 'Invited' %}</th>
         </thead>
         <tbody>
         {% for stats in object_list %}
             <tr
                     {% if stats.current_user %}
-                        style="font-weight: bold;"
+                        class="current-user"
                     {% endif %}
             >
                 <td>{{ stats.rating }}</td>
                 <td>{{ stats.total_score }}</td>
                 <td><img class="circle" src="{{ stats.user.photo_50 }}"></td>
                 <td><a href="https://vk.com/id{{ stats.user_id }}">{{ stats.screen_name }}</a></td>
-                <td>{{ stats.likes }}</td>
-                <td>{{ stats.reposts }}</td>
-                <td>{{ stats.likes_for_reposts }}</td>
-                <td>{{ stats.reposts_for_reposts }}</td>
-                <td>{{ stats.invites }}</td>
             </tr>
         {% empty %}
             <tr>
