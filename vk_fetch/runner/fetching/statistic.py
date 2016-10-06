@@ -1,19 +1,21 @@
-import datetime
-
 from django.db import connection
 from django.db.models import F, Sum
-from django.utils import timezone
 
 from entities.models import VkUserStatisticTotal, VkUser, VkUserStatisticHourly, VkUserStatisticWeekly, \
     VkUserStatisticDaily
+from entities.models.RunPeriod import RunPeriod
 from entities.models.VkInvitation import VkInvitation
+from entities.models.VkUserStatistic import VkUserStatisticPeriod
+from helpers.datetime import get_now, start_of_current_period, start_of_an_hour, start_of_day, start_of_week
 
 
 def update_users_statistic(group):
-    now = datetime.datetime.now(datetime.timezone.utc)
-    current_hour = now.replace(minute=0, second=0, microsecond=0, tzinfo=timezone.utc)
-    current_date = current_hour.replace(hour=0)
-    current_week = current_date - datetime.timedelta(days=current_date.weekday())
+    now = get_now()
+    current_hour = start_of_an_hour(now)
+    current_date = start_of_day(now)
+    current_week = start_of_week(now)
+    current_run_start = start_of_current_period(now)
+    current_run_period, _ = RunPeriod.objects.get_or_create(timestamp=current_run_start)
 
     def get_sum(s, column):
         return s.aggregate(sum=Sum(column)).get('sum') or 0
@@ -36,6 +38,7 @@ def update_users_statistic(group):
         VkUserStatisticHourly.objects.get_or_create(user=user, group=group, timestamp=current_hour)
         VkUserStatisticDaily.objects.get_or_create(user=user, group=group, date=current_date)
         VkUserStatisticWeekly.objects.get_or_create(user=user, group=group, week=current_week)
+        VkUserStatisticPeriod.objects.get_or_create(user=user, group=group, period=current_run_period)
 
         update = dict(
             likes=F('likes') + delta_likes,
@@ -47,20 +50,26 @@ def update_users_statistic(group):
         VkUserStatisticHourly.objects.filter(user=user, group=group, timestamp=current_hour).update(**update)
         VkUserStatisticDaily.objects.filter(user=user, group=group, date=current_date).update(**update)
         VkUserStatisticWeekly.objects.filter(user=user, group=group, week=current_week).update(**update)
+        VkUserStatisticPeriod.objects.filter(user=user, group=group, period=current_run_period).update(**update)
         VkUserStatisticTotal.objects.filter(user=user, group=group).update(**update)
 
-    update_total_score(group)
+    update_total_score(group, current_run_period)
     update_rating(group.pk)
 
 
-def update_total_score(group):
-    VkUserStatisticTotal.objects \
+def update_total_score_base(group, query):
+    query \
         .filter(group=group) \
-        .update(total_score=F('likes') + F('reposts') + F('likes_for_reposts') + F('reposts_for_reposts') + F('invites')
-                )
+        .update(
+        total_score=F('likes') + F('reposts') + F('likes_for_reposts') + F('reposts_for_reposts') + F('invites'))
 
 
-def update_rating(group_id):
+def update_total_score(group, period):
+    update_total_score_base(group, VkUserStatisticTotal.objects)
+    update_total_score_base(group, VkUserStatisticPeriod.objects.filter(period=period))
+
+
+def update_rating_base(group_id, table_name):
     cursor = connection.cursor()
     cursor.execute("""
         UPDATE {table} t1
@@ -70,9 +79,14 @@ def update_rating(group_id):
         WHERE {group_id_column} = {group_id};
     """.format(
         group_id=group_id,
-        table=VkUserStatisticTotal._meta.db_table,
+        table=table_name,
         total_score_column='total_score',
         rating_column='rating',
         group_id_column='group_id'
         # score_column=VkUserStatisticTotal.total_score
     ))
+
+
+def update_rating(group_id):
+    update_rating_base(group_id, VkUserStatisticTotal._meta.db_table)
+    update_rating_base(group_id, VkUserStatisticPeriod._meta.db_table)

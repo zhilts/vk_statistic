@@ -77,6 +77,7 @@ def compile_messages(args='--locale\=ru'):
 
 @task(alias='rdb')
 def recreate_database():
+    local('sudo service postgresql restart')
     local('dropdb vk-fetch --if-exists')
     local('createdb vk-fetch --owner=user')
     migrate()

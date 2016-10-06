@@ -1,6 +1,7 @@
 from django.db import models
 
 from entities.models import VkUser, VkGroup
+from entities.models.RunPeriod import RunPeriod
 
 
 class VkUserStatisticBase(models.Model):
@@ -37,9 +38,21 @@ class VkUserStatisticWeekly(VkUserStatisticBase):
         db_table = 'user_statistic_weekly'
 
 
-class VkUserStatisticTotal(VkUserStatisticBase):
+class VkUserStatisticTotalAbstract(VkUserStatisticBase):
     total_score = models.IntegerField(default=0)
     rating = models.IntegerField(default=0)
 
     class Meta:
+        abstract = True
+
+
+class VkUserStatisticTotal(VkUserStatisticTotalAbstract):
+    class Meta:
         db_table = 'user_statistic_total'
+
+
+class VkUserStatisticPeriod(VkUserStatisticTotalAbstract):
+    period = models.ForeignKey(RunPeriod, null=False)
+
+    class Meta:
+        db_table = 'user_statistic_period'

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-28 20:03+0000\n"
+"POT-Creation-Date: 2016-10-06 21:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,46 +20,60 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: entities/templates/entities/top_ten.html:13
+#: entities/templates/base_table.html:15
+msgid "My"
+msgstr "Моё"
+
+#: entities/templates/base_table.html:20
+msgid "Total"
+msgstr "Всё"
+
+#: entities/templates/base_table.html:25
+msgid "Last 3 days"
+msgstr "За 3 дня"
+
+#: entities/templates/entities/group_user.html:11
+#: entities/templates/top_ten.html:7
 msgid "Rating"
 msgstr "Место"
 
-#: entities/templates/entities/top_ten.html:14
+#: entities/templates/entities/group_user.html:15
+#: entities/templates/top_ten.html:8
 msgid "Karma"
 msgstr "Карма"
 
-#: entities/templates/entities/top_ten.html:15
-msgid "Avatar"
-msgstr "Аватар"
-
-#: entities/templates/entities/top_ten.html:16
-msgid "Name"
-msgstr "Имя"
-
-#: entities/templates/entities/top_ten.html:17
+#: entities/templates/entities/group_user.html:19
 msgid "Likes"
 msgstr "Лайки"
 
-#: entities/templates/entities/top_ten.html:18
+#: entities/templates/entities/group_user.html:23
 msgid "Reposts"
 msgstr "Репосты"
 
-#: entities/templates/entities/top_ten.html:19
+#: entities/templates/entities/group_user.html:27
 msgid "Likes for Reposts"
 msgstr "Лайки репостов"
 
-#: entities/templates/entities/top_ten.html:20
+#: entities/templates/entities/group_user.html:31
 msgid "Reposts for Reposts"
 msgstr "Репосты репостов"
 
-#: entities/templates/entities/top_ten.html:21
+#: entities/templates/entities/group_user.html:35
 msgid "Invited"
 msgstr "Приглашения"
 
-#: settings/settings.py:116
+#: entities/templates/top_ten.html:9
+msgid "Avatar"
+msgstr "Аватар"
+
+#: entities/templates/top_ten.html:10
+msgid "Name"
+msgstr "Имя"
+
+#: settings/settings.py:115
 msgid "English"
 msgstr "Английский"
 
-#: settings/settings.py:117
+#: settings/settings.py:116
 msgid "Russian"
 msgstr "Русский"

@@ -1,0 +1,31 @@
+<head>
+    {% load staticfiles %}
+    {% load i18n %}
+    {% block styles %}
+        <link rel="stylesheet" href="{% static "StickyTableHeaders/css/normalize.css" %}">
+        <link rel="stylesheet" href="{% static "StickyTableHeaders/css/component.css" %}">
+        <link rel="stylesheet" href="{% static "StickyTableHeaders/css/demo.css" %}">
+        <link rel="stylesheet" href="{% static "base.css" %}">
+    {% endblock %}
+</head>
+<body>
+<div class="context">
+    <a href="{% url 'group-user' group_id=group_id user_id=current_user_id %}">
+        <button>
+            {% trans 'My' %}
+        </button>
+    </a>
+    <a href="{% url 'top-ten' group_id %}">
+        <button>
+            {% trans 'Total' %}
+        </button>
+    </a>
+    <a href="{% url 'top-ten-period-current' group_id %}">
+        <button>
+            {% trans 'Last 3 days' %}
+        </button>
+    </a>
+</div>
+{% block content %}
+{% endblock %}
+</body>

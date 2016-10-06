@@ -1,0 +1,7 @@
+<h1>Group Periods for <a href="//vk.com/{{ group.domain }}">{{ group.domain }}</a></h1>
+<ul>
+    {% for period in object_list %}
+        <li><a href="{% url 'top-ten-period' group_id=group.vk_id period_id=period.id %}">{{ period.id }}
+            - {{ period.timestamp }}</a></li>
+    {% endfor %}
+</ul>

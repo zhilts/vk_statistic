@@ -9,8 +9,6 @@ https://docs.djangoproject.com/en/1.9/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
-from datetime import timedelta
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -112,6 +110,7 @@ LOCALE_PATHS = (
 )
 
 from django.utils.translation import ugettext_lazy as _
+
 LANGUAGES = (
     ('en', _('English')),
     ('ru', _('Russian')),
@@ -187,3 +186,9 @@ LOGGING = {
         }
     }
 }
+
+from datetime import datetime, timedelta, timezone
+import pytz
+
+RUN_START = pytz.UTC.localize(datetime(year=2016, month=10, day=1))
+RUN_PERIOD = timedelta(days=3)
