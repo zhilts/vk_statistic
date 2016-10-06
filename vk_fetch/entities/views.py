@@ -1,5 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import F, Value, Case, When, BooleanField
 from django.db.models.functions import Concat
+from django.http import Http404
+from django.shortcuts import render
+from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import View
 
@@ -51,6 +55,7 @@ class BaseTopView(ListView):
     def get_context_data(self, **kwargs):
         context = super(BaseTopView, self).get_context_data(**kwargs)
         context['group_id'] = self.group_id
+        context['current_user_id'] = self.request.GET.get('viewer_id', 0)
         return context
 
     # todo: move to middleware
@@ -114,3 +119,18 @@ class GroupPeriodsView(ListView):
         group = VkGroup.objects.get(vk_id=self.kwargs.get('group_id'))
         context['group'] = group
         return context
+
+
+class UserGroupOverview(View):
+    def get(self, request, *args, **kwargs):
+        user_id = kwargs.get('user_id')
+        group_id = kwargs.get('group_id')
+
+        try:
+            user = VkUser.objects.get(id=user_id)
+            stats = VkUserStatisticTotal.objects.get(group__vk_id=group_id, user_id=user_id)
+        except ObjectDoesNotExist:
+            raise Http404
+
+        return render(request, 'entities/group_user.html',
+                      dict(user=user, stats=stats, group_id=group_id, current_user_id=user_id))

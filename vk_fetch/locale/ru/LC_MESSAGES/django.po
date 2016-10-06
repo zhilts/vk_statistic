@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-04 10:19+0000\n"
+"POT-Creation-Date: 2016-10-06 21:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,27 +20,53 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: entities/templates/entities/top_ten.html:13
-msgid "Total"
-msgstr "Общая"
+#: entities/templates/base_table.html:15
+msgid "My"
+msgstr "Моё"
 
-#: entities/templates/entities/top_ten.html:18
+#: entities/templates/base_table.html:20
+msgid "Total"
+msgstr "Всё"
+
+#: entities/templates/base_table.html:25
 msgid "Last 3 days"
 msgstr "За 3 дня"
 
-#: entities/templates/entities/top_ten.html:25
+#: entities/templates/entities/group_user.html:11
+#: entities/templates/top_ten.html:7
 msgid "Rating"
 msgstr "Место"
 
-#: entities/templates/entities/top_ten.html:26
+#: entities/templates/entities/group_user.html:15
+#: entities/templates/top_ten.html:8
 msgid "Karma"
 msgstr "Карма"
 
-#: entities/templates/entities/top_ten.html:27
+#: entities/templates/entities/group_user.html:19
+msgid "Likes"
+msgstr "Лайки"
+
+#: entities/templates/entities/group_user.html:23
+msgid "Reposts"
+msgstr "Репосты"
+
+#: entities/templates/entities/group_user.html:27
+msgid "Likes for Reposts"
+msgstr "Лайки репостов"
+
+#: entities/templates/entities/group_user.html:31
+msgid "Reposts for Reposts"
+msgstr "Репосты репостов"
+
+#: entities/templates/entities/group_user.html:35
+msgid "Invited"
+msgstr "Приглашения"
+
+#: entities/templates/top_ten.html:9
 msgid "Avatar"
 msgstr "Аватар"
 
-#: entities/templates/entities/top_ten.html:28
+#: entities/templates/top_ten.html:10
 msgid "Name"
 msgstr "Имя"
 
@@ -51,18 +77,3 @@ msgstr "Английский"
 #: settings/settings.py:116
 msgid "Russian"
 msgstr "Русский"
-
-#~ msgid "Likes"
-#~ msgstr "Лайки"
-
-#~ msgid "Reposts"
-#~ msgstr "Репосты"
-
-#~ msgid "Likes for Reposts"
-#~ msgstr "Лайки репостов"
-
-#~ msgid "Reposts for Reposts"
-#~ msgstr "Репосты репостов"
-
-#~ msgid "Invited"
-#~ msgstr "Приглашения"

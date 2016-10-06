@@ -19,7 +19,7 @@ from django.contrib import admin
 
 from django.conf import settings
 from entities.views import GroupListView, PostListView, UserListView, UserLikesListView, UserTopTenView, \
-    UserTopTenPeriod, CurrentPeriodTopTen, GroupPeriodsView
+    UserTopTenPeriod, CurrentPeriodTopTen, GroupPeriodsView, UserGroupOverview
 from vk_fetch.views import main_view
 
 import logging
@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^users/(?P<post_id>[0-9]+)/post/likes$', UserLikesListView.as_view(), name='likes-by-post'),
     url(r'^top_ten/(?P<group_id>[0-9]+)/$', UserTopTenView.as_view(), name='top-ten'),
     url(r'^group/(?P<group_id>[0-9]+)/periods/$', GroupPeriodsView.as_view(), name='group-periods'),
+    url(r'^group/(?P<group_id>[0-9]+)/user/(?P<user_id>[0-9]+)/$', UserGroupOverview.as_view(), name='group-user'),
     url(r'^top_ten/(?P<group_id>[0-9]+)/period/(?P<period_id>[0-9]+)/$', UserTopTenPeriod.as_view(),
         name='top-ten-period'),
     url(r'^top_ten/(?P<group_id>[0-9]+)/period/current/$', CurrentPeriodTopTen.as_view(),

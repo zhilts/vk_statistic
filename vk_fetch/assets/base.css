@@ -7,7 +7,7 @@
 }
 
 .context {
-    width: 300px;
+    width: 400px;
     margin: auto;
     height: auto;
     text-align: -webkit-center;
@@ -18,7 +18,7 @@
 }
 
 .context a button {
-    width: 140px;
+    width: 130px;
     padding: 12px;
     font-family: 'Lato', Arial, sans-serif;
     color: #7c8d87;
@@ -29,12 +29,27 @@
 }
 
 .sticky-wrap {
-    /*width: 700px;*/
     margin-right: 0;
-
 }
 
 .sticky-wrap table {
     margin-bottom: 0;
     width: 100%;
+}
+
+.title {
+    text-align: center;
+}
+
+.sticky-wrap.user-details tr th {
+    width: 200px;
+}
+
+.sticky-wrap.user-details tr td {
+    width: 100px;
+}
+
+.sticky-wrap.user-details {
+    width: 300px;
+    margin: auto;
 }
