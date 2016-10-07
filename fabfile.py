@@ -139,6 +139,7 @@ def upload_src(version):
         run('./pyenv.sh ./manage.py migrate --run-syncdb')
         run('./pyenv.sh ./manage.py collectstatic --noinput')
         run('./pyenv.sh fab msgc')
+        run('chown -R user:user ./')
 
 
 def move_link(version):
