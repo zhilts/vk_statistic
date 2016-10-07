@@ -1,11 +1,11 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import F, Value, Case, When, BooleanField
+from django.db.models import Value, Case, When, BooleanField
 from django.db.models.functions import Concat
 from django.http import Http404
 from django.shortcuts import render
-from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import View
+from requests import session
 
 from entities.models import VkGroup, VkPost, VkUser, VkUserStatisticTotal
 from entities.models.RunPeriod import RunPeriod
@@ -44,6 +44,10 @@ class UserLikesListView(ListView):
         return post.likes.all()
 
 
+def get_viewer_id():
+    return getattr(session, 'user_id', 0)
+
+
 class BaseTopView(ListView):
     template_name = 'top_ten.html'
 
@@ -55,7 +59,7 @@ class BaseTopView(ListView):
     def get_context_data(self, **kwargs):
         context = super(BaseTopView, self).get_context_data(**kwargs)
         context['group_id'] = self.group_id
-        context['current_user_id'] = self.request.GET.get('viewer_id', 0)
+        context['current_user_id'] = get_viewer_id()
         return context
 
     # todo: move to middleware
@@ -67,7 +71,7 @@ class BaseTopView(ListView):
             add_invite.delay(group_id=group_id, viewer_id=viewer_id, user_id=user_id)
 
     def get_queryset(self):
-        viewer_id = int(self.request.GET.get('viewer_id', -1))
+        viewer_id = get_viewer_id()
         self.group_id = int(self.kwargs.get('group_id'))
         self.update_invites(viewer_id, self.request.GET)
 
@@ -118,6 +122,7 @@ class GroupPeriodsView(ListView):
         context = super(GroupPeriodsView, self).get_context_data(**kwargs)
         group = VkGroup.objects.get(vk_id=self.kwargs.get('group_id'))
         context['group'] = group
+        context['current_user_id'] = getattr(session, 'user_id', 0)
         return context
 
 
@@ -125,7 +130,6 @@ class UserGroupOverview(View):
     def get(self, request, *args, **kwargs):
         user_id = kwargs.get('user_id')
         group_id = kwargs.get('group_id')
-
         try:
             user = VkUser.objects.get(id=user_id)
             stats = VkUserStatisticTotal.objects.get(group__vk_id=group_id, user_id=user_id)
@@ -134,3 +138,8 @@ class UserGroupOverview(View):
 
         return render(request, 'entities/group_user.html',
                       dict(user=user, stats=stats, group_id=group_id, current_user_id=user_id))
+
+    def get_context_data(self, **kwargs):
+        context = super(UserGroupOverview, self).get_context_data(**kwargs)
+        context['current_user_id'] = get_viewer_id()
+        return context
