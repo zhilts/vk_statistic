@@ -54,7 +54,7 @@ def update_users_statistic(group):
         VkUserStatisticTotal.objects.filter(user=user, group=group).update(**update)
 
     update_total_score(group, current_run_period)
-    update_rating(group.pk)
+    update_rating(group.pk, current_run_period)
 
 
 def update_total_score_base(group, query):
@@ -69,7 +69,7 @@ def update_total_score(group, period):
     update_total_score_base(group, VkUserStatisticPeriod.objects.filter(period=period))
 
 
-def update_rating_base(group_id, table_name):
+def update_rating_total(group_id, table_name):
     cursor = connection.cursor()
     cursor.execute("""
         UPDATE {table} t1
@@ -83,10 +83,31 @@ def update_rating_base(group_id, table_name):
         total_score_column='total_score',
         rating_column='rating',
         group_id_column='group_id'
-        # score_column=VkUserStatisticTotal.total_score
     ))
 
 
-def update_rating(group_id):
-    update_rating_base(group_id, VkUserStatisticTotal._meta.db_table)
-    update_rating_base(group_id, VkUserStatisticPeriod._meta.db_table)
+def update_rating_period(group_id, table_name, period_id):
+    cursor = connection.cursor()
+    cursor.execute("""
+        UPDATE {table} t1
+        SET {rating_column} = 1 + (SELECT Count(*)
+                      FROM {table} t2
+                      WHERE t1.{total_score_column} < t2.{total_score_column}
+                        AND t2.{group_id_column} = {group_id}
+                        AND t2.{period_id_column} = {period_id}
+                      )
+        WHERE {group_id_column} = {group_id} AND {period_id_column} = {period_id};
+    """.format(
+        group_id=group_id,
+        table=table_name,
+        total_score_column='total_score',
+        rating_column='rating',
+        group_id_column='group_id',
+        period_id_column='period_id',
+        period_id=period_id,
+    ))
+
+
+def update_rating(group_id, period):
+    update_rating_total(group_id, VkUserStatisticTotal._meta.db_table)
+    update_rating_period(group_id, VkUserStatisticPeriod._meta.db_table, period.pk)
