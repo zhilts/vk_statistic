@@ -27,6 +27,11 @@ class VkApiError(Exception):
 def safe_get(*args, **kwargs):
     count = 0
     exception = None
+
+    headers = {'Accept-Language': 'ru'}
+    headers.update(kwargs.get('headers', {}))
+
+    kwargs['headers'] = headers
     while count < 10:
         try:
             res = requests.post(*args, **kwargs)
@@ -61,15 +66,16 @@ def _bulk_vk_iterator(method, request_params=None):
     count = None
     while True:
         request['offset'] = offset
-        response = safe_get(url, data=request) \
-            .json() \
-            .get('response', {})
+        full_response = safe_get(url, data=request) \
+            .json()
 
+        response = full_response.get('response', {})
         items = response.get('items')
 
         offset += paging
         count = count or response.get('count', 0)
         if items is None:
+            print(full_response)
             raise Exception
         yield items
 
