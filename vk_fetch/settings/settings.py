@@ -75,14 +75,15 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django_db_geventpool.backends.postgresql_psycopg2',
         'NAME': 'vk-fetch',
         'USER': 'user',
         'PASSWORD': 'user123',
-        'HOST': 'localhost'
+        'HOST': 'localhost',
+        'ATOMIC_REQUESTS': False,
+        'CONN_MAX_AGE': 0,
     }
 }
 

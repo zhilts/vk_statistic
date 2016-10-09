@@ -18,9 +18,9 @@ def fetch_reposts(post):
             continue
         user, _ = VkUser.objects.get_or_create(id=from_id)
         VkRepost.objects.create(
-                vk_id=repost_data.get('id'),
-                user=user,
-                post=post,
-                likes=repost_data.get('likes', {}).get('count', 0),
-                reposts=repost_data.get('reposts', {}).get('count', 0)
+            vk_id=repost_data.get('id'),
+            user=user,
+            post=post,
+            likes=repost_data.get('likes', {}).get('count', 0),
+            reposts=repost_data.get('reposts', {}).get('count', 0)
         )

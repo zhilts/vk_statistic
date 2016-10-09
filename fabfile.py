@@ -143,9 +143,10 @@ def upload_src(version):
 def move_link(version):
     current_path = '{base_path}/releases/{current}'.format(base_path=base_path, current=version)
     current_link = '{base_path}/current'.format(base_path=base_path, current=version)
+    run('sudo supervisorctl stop all')
     run('rm -f {current_link}'.format(current_link=current_link))
     run('ln -s {current_path} {current_link}'.format(current_path=current_path, current_link=current_link))
-    run('sudo supervisorctl update; sudo supervisorctl restart all')
+    run('sudo supervisorctl update; sudo supervisorctl start all')
 
 
 @task()

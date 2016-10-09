@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+from settings.gevent_init import patch_world
+
+patch_world()
 import os
 import sys
 

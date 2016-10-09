@@ -1,3 +1,8 @@
+import multiprocessing
+from time import time
+
+import gevent
+
 from entities.models import VkPost
 from runner.fetching.likes import fetch_likes
 from runner.fetching.posts import update_post
@@ -13,28 +18,44 @@ def update_group_info(group):
     return group
 
 
+def worker(queue, res):
+    while True:
+        post_data, group = queue.get()
+        try:
+            post = update_post(post_data, group)
+            fetch_likes(post)
+            fetch_reposts(post)
+            res.append(post.pk)
+        finally:
+            queue.task_done()
+
+
+def get_queue():
+    res = []
+    queue = gevent.queue.JoinableQueue()
+    for i in range(multiprocessing.cpu_count() * 2 + 1):
+        gevent.spawn(worker, queue, res)
+
+    return queue, res
+
+
+def fetch_all(group):
+    queue, post_ids = get_queue()
+    for post_data in posts_for_group(group.domain):
+        queue.put((post_data, group))
+
+    queue.join()
+    VkPost.objects \
+        .filter(group=group) \
+        .exclude(pk__in=post_ids).delete()
+
+
 def process_group(group):
     print('Starting processing group <{group_domain}>'.format(group_domain=group))
     group = update_group_info(group)
-    existing_posts = set()
-    spawned_treads = []
-    for post_data in posts_for_group(group.domain):
-        post = update_post(post_data, group)
-        fetch_likes(post)
-        fetch_reposts(post)
-        # fixme: performance
-        # fetch_likes_thread = FetchLikes(post)
-        # spawned_treads.append(fetch_likes_thread)
-        # fetch_likes_thread.start()
-        existing_posts.add(post.pk)
-
-    for thread in spawned_treads:
-        thread.join()
-
-    VkPost.objects \
-        .filter(group=group) \
-        .exclude(pk__in=existing_posts).delete()
-
+    start = time()
+    fetch_all(group)
+    print(time() - start)
     update_users_statistic(group)
 
     print('Processing group <{group_domain}> complete'.format(group_domain=group))
