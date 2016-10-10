@@ -1,4 +1,5 @@
 import multiprocessing
+from time import time
 
 import gevent
 
@@ -51,8 +52,9 @@ def fetch_all(group):
 
 def process_group(group):
     print('Starting processing group <{group_domain}>'.format(group_domain=group))
+    start = time()
     group = update_group_info(group)
     fetch_all(group)
     update_users_statistic(group)
-
+    print(time() - start)
     print('Processing group <{group_domain}> complete'.format(group_domain=group))

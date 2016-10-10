@@ -1,5 +1,6 @@
 import json
 
+import re
 import requests
 from django.core.paginator import Paginator
 
@@ -20,27 +21,86 @@ base_iteration_request_pairs = base_request_pairs + (
 )
 
 
+class Proxies(object):
+    def __init__(self):
+        self.proxies = None
+        self.current = None
+
+    def reload(self):
+        self.proxies = [None]
+        proxies_table_page = requests.get('https://free-proxy-list.net/').text
+
+        proxies_table = re.search('<tbody>(.*)<\/tbody>', proxies_table_page, re.S).group(1)
+        rows = re.split('\n', proxies_table)
+        for row in rows:
+            try:
+                host, port, _, ssl = re.search(
+                    '<td>(\d+\.\d+\.\d+\.\d+)<\/td><td>(\d+)(.+<td>){5}(\w{2,3})<\/td>.+<\/td>', row).groups()
+                if ssl == 'yes':
+                    self.proxies.append('https://{host}:{port}'.format(host=host, port=port))
+            except:
+                pass
+        self.current = 0
+
+    def next(self):
+        if len(self.proxies) == 0:
+            return None
+        self.current = (self.current + 1) % len(self.proxies)
+
+    def get(self):
+        if len(self.proxies) == 0:
+            return None
+        return self.proxies[self.current]
+
+proxies = Proxies()
+
+
+def reload_proxies():
+    proxies.reload()
+
+
 class VkApiError(Exception):
     pass
+
+
+def default_headers(kwargs):
+    headers = {'Accept-Language': 'ru', 'cache-control': "no-cache",
+               'postman-token': "c6f190fb-49c6-2c6d-4e1c-ce0e24967de1"}
+    headers.update(kwargs.get('headers', {}))
+
+    kwargs['headers'] = headers
+
+
+def default_kwargs(kwargs):
+    default_headers(kwargs)
+
+
+def update_proxy(kwargs):
+    next_proxy = proxies.get()
+    if next_proxy is None:
+        kwargs.pop('proxies', None)
+    else:
+        kwargs['proxies'] = {'https': next_proxy}
 
 
 def safe_get(*args, **kwargs):
     count = 0
     exception = None
 
-    headers = {'Accept-Language': 'ru'}
-    headers.update(kwargs.get('headers', {}))
+    default_kwargs(kwargs)
 
-    kwargs['headers'] = headers
     while count < 10:
         try:
+            update_proxy(kwargs)
+            print(args[0], kwargs.get('proxies', None))
             res = requests.post(*args, **kwargs)
-            if res.status_code < 200 or res.status_code >= 400:
-                msg = 'response.get() error args={args}, kwargs={kwargs}, res={res}, status={status}' \
+            if res.status_code < 200 or res.status_code >= 400 or res.json().get('error', None) is not None:
+                msg = 'response.post() error args={args}, kwargs={kwargs}, res={res}, status={status}' \
                     .format(args=args, kwargs=kwargs, res=res, status=res.status_code)
                 raise VkApiError(msg)
             return res
         except Exception as ex:
+            proxies.next()
             count += 1
             exception = ex
 
@@ -75,7 +135,6 @@ def _bulk_vk_iterator(method, request_params=None):
         offset += paging
         count = count or response.get('count', 0)
         if items is None:
-            print(full_response)
             raise Exception
         yield items
 
@@ -85,7 +144,6 @@ def _bulk_vk_iterator(method, request_params=None):
 
 def _vk_iterator(method, parameters):
     for page in _bulk_vk_iterator(method, parameters):
-        # print(method, parameters, json.dumps(page))
         for item in page:
             yield item
 
