@@ -92,8 +92,7 @@ class VkApiError(Exception):
 
 
 def default_headers(kwargs):
-    headers = {'Accept-Language': 'ru', 'cache-control': "no-cache",
-               'postman-token': "c6f190fb-49c6-2c6d-4e1c-ce0e24967de1"}
+    headers = {'Accept-Language': 'ru'}
     headers.update(kwargs.get('headers', {}))
 
     kwargs['headers'] = headers
