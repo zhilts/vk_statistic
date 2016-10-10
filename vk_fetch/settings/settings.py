@@ -178,15 +178,20 @@ LOGGING = {
         },
     },
     'loggers': {
-        'runner.tasks': {
-            'handlers': ['celery', 'console'],
-            'level': 'WARNING',
+        'runner': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
         },
         'django.views.static.serve': {
-            'handlers': ['celery', 'console'],
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'vk_api': {
+            'handlers': ['console'],
             'level': 'DEBUG',
         }
-    }
+    },
+
 }
 
 from datetime import datetime, timedelta, timezone

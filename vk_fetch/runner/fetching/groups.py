@@ -1,3 +1,4 @@
+import logging
 import multiprocessing
 
 import gevent
@@ -49,9 +50,12 @@ def fetch_all(group):
         .exclude(pk__in=post_ids).delete()
 
 
+logger = logging.getLogger(__name__)
+
+
 def process_group(group):
-    print('Starting processing group <{group_domain}>'.format(group_domain=group))
+    logger.info('Starting processing group <{group_domain}>'.format(group_domain=group))
     group = update_group_info(group)
     fetch_all(group)
     update_users_statistic(group)
-    print('Processing group <{group_domain}> complete'.format(group_domain=group))
+    logger.info('Processing group <{group_domain}> complete'.format(group_domain=group))

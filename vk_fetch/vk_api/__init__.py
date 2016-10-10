@@ -1,4 +1,4 @@
-import json
+import logging
 from time import time
 
 import re
@@ -21,14 +21,22 @@ base_iteration_request_pairs = base_request_pairs + (
     ('count', paging),
 )
 
+logger = logging.getLogger(__name__)
+
 
 def test_proxy(proxy):
+    logger.debug('testing proxy {proxy}'.format(proxy=proxy))
     start = time()
     try:
         res = requests.get('https://api.vk.com/method/apps.get?app_id=5539206', proxies={'https': proxy}, timeout=5)
-        return res.status_code == 200, time() - start
-    except:
-        print('exception')
+        timing = time() - start
+        logger.debug('test proxy {proxy} success with status={status_code} and timing={timing}'.format(proxy=proxy,
+                                                                                                       status_code=res.status_code,
+                                                                                                       timing=timing))
+        return res.status_code == 200, timing
+    except Exception as ex:
+        logger.warn(
+            'test proxy {proxy} failed with {ex}'.format(proxy=proxy, ex=ex))
         return False, None
 
 
@@ -38,6 +46,7 @@ class Proxies(object):
         self.current = None
 
     def reload(self):
+        logger.debug('proxy reload start')
         self.proxies = []
         test_proxies = []
         proxies_table_page = requests.get('https://free-proxy-list.net/').text
@@ -58,6 +67,7 @@ class Proxies(object):
 
         self.proxies = list(map(lambda x: x[0], sorted(test_proxies, key=lambda x: x[1])))
         self.current = -1
+        logger.info('proxy reload finished. proxies={proxies}'.format(proxies=self.proxies))
 
     def next(self):
         if len(self.proxies) == 0:
@@ -115,7 +125,7 @@ def safe_get(*args, **kwargs):
     while count < 10:
         try:
             update_proxy(kwargs)
-            print(args[0], kwargs.get('proxies', None))
+            logger.debug('request with {args} {kwargs} starting'.format(args=args, kwargs=kwargs))
             res = requests.post(*args, **kwargs)
             if res.status_code < 200 or res.status_code >= 400 or res.json().get('error', None) is not None:
                 msg = 'response.post() error args={args}, kwargs={kwargs}, res={res}, status={status}' \
@@ -123,6 +133,7 @@ def safe_get(*args, **kwargs):
                 raise VkApiError(msg)
             return res
         except Exception as ex:
+            logger.debug('request with {args} {kwargs} failed with {ex}'.format(args=args, kwargs=kwargs, ex=ex))
             proxies.next()
             count += 1
             exception = ex

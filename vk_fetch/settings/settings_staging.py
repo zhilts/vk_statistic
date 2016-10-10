@@ -29,7 +29,11 @@ LOGGING = {
     'loggers': {
         'runner.tasks': {
             'handlers': ['console'],
-            'level': 'WARNING',
+            'level': 'DEBUG',
         },
+        'vk_api': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        }
     }
 }
