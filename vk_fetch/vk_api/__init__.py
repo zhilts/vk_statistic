@@ -24,8 +24,12 @@ base_iteration_request_pairs = base_request_pairs + (
 
 def test_proxy(proxy):
     start = time()
-    res = requests.get('https://api.vk.com/method/apps.get?app_id=5539206', proxies={'https': proxy})
-    return res.status_code == 200, time() - start
+    try:
+        res = requests.get('https://api.vk.com/method/apps.get?app_id=5539206', proxies={'https': proxy}, timeout=5)
+        return res.status_code == 200, time() - start
+    except:
+        print('exception')
+        return False, None
 
 
 class Proxies(object):
@@ -51,7 +55,8 @@ class Proxies(object):
                         test_proxies.append((proxy, ping))
             except:
                 pass
-        self.proxies = sorted(test_proxies, key=lambda x: x[1])
+
+        self.proxies = list(map(lambda x: x[0], sorted(test_proxies, key=lambda x: x[1])))
         self.current = -1
 
     def next(self):
@@ -82,6 +87,7 @@ def default_headers(kwargs):
     headers.update(kwargs.get('headers', {}))
 
     kwargs['headers'] = headers
+    kwargs['timeout'] = 10
 
 
 def default_kwargs(kwargs):
