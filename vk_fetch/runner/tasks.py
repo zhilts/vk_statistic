@@ -2,14 +2,16 @@ from __future__ import absolute_import
 
 from logging.config import dictConfig
 
-from celery import chain, group, shared_task
+from celery import chain, group
 from celery.utils.log import get_task_logger
 from django.conf import settings
 
 from entities.models import VkGroup
 from entities.models import VkUser
 from entities.models.VkInvitation import VkInvitation
-from runner.fetching import process_group, process_all
+from helpers.proxy import update_proxies
+from runner.fetching.groups import process_group
+from runner.fetching.users import update_users_info
 from vk_fetch.celery import app
 
 logger = get_task_logger(__name__)
@@ -17,27 +19,23 @@ logger = get_task_logger(__name__)
 dictConfig(settings.LOGGING)
 
 
-@shared_task
-def fetch_all():
-    process_all()
+@app.task()
+def reload_all_proxies():
+    update_proxies()
 
 
 @app.task(trail=True)
-def fetch_all__draft():
-    logger.debug('started')
-    job = chain(update_groups.si(), update_users.si())
-    result = job().get()
-    logger.debug('ended. res={res}'.format(res=result))
+def fetch_all():
+    job = chain(reload_all_proxies.si(), update_groups.si(), update_users.si())
+    job.apply_async()
 
 
 @app.task(trail=True)
 def update_groups():
-    logger.debug('started')
     job = group([update_group.si(group_id) for group_id in
                  VkGroup.objects.filter(active=True).values_list('pk', flat=True)])
 
-    logger.debug('ended')
-    return job.apply_async()
+    job.apply_async()
 
 
 @app.task(trail=True)
@@ -50,9 +48,7 @@ def update_group(group_id):
 
 @app.task(trail=True)
 def update_users():
-    args = ()
-    logger.debug('started with args={args}'.format(args=args))
-    logger.debug('finished with args={args}'.format(args=args))
+    update_users_info()
 
 
 @app.task()

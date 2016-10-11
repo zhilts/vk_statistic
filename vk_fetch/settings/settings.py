@@ -167,7 +167,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'standard'
         },
         'celery': {
             'level': 'DEBUG',
@@ -189,9 +189,24 @@ LOGGING = {
         'vk_api': {
             'handlers': ['console'],
             'level': 'DEBUG',
+        },
+        'vk_fetch': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
         }
     },
+}
 
+REDIS_STORAGE = {
+    'proxy': {
+        'HOST': 'localhost',
+        'PORT': '6379',
+        'DB': 1
+    }
 }
 
 from datetime import datetime, timedelta, timezone

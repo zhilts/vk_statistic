@@ -1,9 +1,9 @@
 import logging
-from time import time
 
-import re
 import requests
 from django.core.paginator import Paginator
+
+from helpers.proxy import ProxyManager
 
 try:
     import httplib
@@ -23,68 +23,7 @@ base_iteration_request_pairs = base_request_pairs + (
 
 logger = logging.getLogger(__name__)
 
-
-def test_proxy(proxy):
-    logger.debug('testing proxy {proxy}'.format(proxy=proxy))
-    start = time()
-    try:
-        res = requests.get('https://api.vk.com/method/apps.get?app_id=5539206', proxies={'https': proxy}, timeout=5)
-        timing = time() - start
-        logger.debug('test proxy {proxy} success with status={status_code} and timing={timing}'.format(proxy=proxy,
-                                                                                                       status_code=res.status_code,
-                                                                                                       timing=timing))
-        return res.status_code == 200, timing
-    except Exception as ex:
-        logger.warn(
-            'test proxy {proxy} failed with {ex}'.format(proxy=proxy, ex=ex))
-        return False, None
-
-
-class Proxies(object):
-    def __init__(self):
-        self.proxies = None
-        self.current = None
-
-    def reload(self):
-        logger.debug('proxy reload start')
-        self.proxies = []
-        test_proxies = []
-        proxies_table_page = requests.get('https://free-proxy-list.net/').text
-
-        proxies_table = re.search('<tbody>(.*)<\/tbody>', proxies_table_page, re.S).group(1)
-        rows = re.split('\n', proxies_table)
-        for row in rows:
-            try:
-                host, port, _, ssl = re.search(
-                    '<td>(\d+\.\d+\.\d+\.\d+)<\/td><td>(\d+)(.+<td>){5}(\w{2,3})<\/td>.+<\/td>', row).groups()
-                if ssl == 'yes':
-                    proxy = 'https://{host}:{port}'.format(host=host, port=port)
-                    works, ping = test_proxy(proxy=proxy)
-                    if works:
-                        test_proxies.append((proxy, ping))
-            except:
-                pass
-
-        self.proxies = list(map(lambda x: x[0], sorted(test_proxies, key=lambda x: x[1])))
-        self.current = -1
-        logger.info('proxy reload finished. proxies={proxies}'.format(proxies=self.proxies))
-
-    def next(self):
-        if len(self.proxies) == 0:
-            return None
-        self.current = (self.current + 1) % len(self.proxies)
-
-    def get(self):
-        if self.current == -1 or len(self.proxies) == 0:
-            return None
-        return self.proxies[self.current]
-
-
-proxies = Proxies()
-
-
-def reload_proxies():
-    proxies.reload()
+proxy_manager = ProxyManager.instance()
 
 
 class VkApiError(Exception):
@@ -111,7 +50,7 @@ def set_proxy(kwargs, new_proxy):
 
 
 def update_proxy(kwargs):
-    next_proxy = proxies.get()
+    next_proxy = proxy_manager.get()
     set_proxy(kwargs, next_proxy)
 
 
@@ -133,7 +72,7 @@ def safe_get(*args, **kwargs):
             return res
         except Exception as ex:
             logger.debug('request with {args} {kwargs} failed with {ex}'.format(args=args, kwargs=kwargs, ex=ex))
-            proxies.next()
+            proxy_manager.next()
             count += 1
             exception = ex
 

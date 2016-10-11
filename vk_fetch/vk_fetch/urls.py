@@ -25,7 +25,6 @@ from vk_fetch.views import main_view
 import logging
 
 logger = logging.getLogger()
-logger.info('works')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

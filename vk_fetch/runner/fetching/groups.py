@@ -1,7 +1,6 @@
 import logging
-import multiprocessing
 
-import gevent
+from celery import group
 
 from entities.models import VkPost
 from runner.fetching.likes import fetch_likes
@@ -9,6 +8,7 @@ from runner.fetching.posts import update_post
 from runner.fetching.reposts import fetch_reposts
 from runner.fetching.statistic import update_users_statistic
 from vk_api import get_group_info, posts_for_group
+from vk_fetch.celery import app
 
 
 def update_group_info(group):
@@ -18,35 +18,21 @@ def update_group_info(group):
     return group
 
 
-def worker(queue, res):
-    while True:
-        post_data, group = queue.get()
-        try:
-            post = update_post(post_data, group)
-            fetch_likes(post)
-            fetch_reposts(post)
-            res.append(post.pk)
-        finally:
-            queue.task_done()
+@app.task(trail=True)
+def process_post_data(post_data, group):
+    logger.debug('post {post_id} starting process'.format(post_id=post_data['id']))
+    post = update_post(post_data, group)
+    fetch_likes(post)
+    fetch_reposts(post)
+    logger.debug('post {post_id} processed'.format(post_id=post_data['id']))
+    return post.pk
 
 
-def get_queue():
-    res = []
-    queue = gevent.queue.JoinableQueue()
-    for i in range(multiprocessing.cpu_count() * 2 + 1):
-        gevent.spawn(worker, queue, res)
-
-    return queue, res
-
-
-def fetch_all(group):
-    queue, post_ids = get_queue()
-    for post_data in posts_for_group(group.domain):
-        queue.put((post_data, group))
-
-    queue.join()
+def fetch_all(vk_group):
+    job = group([process_post_data.si(post_data, vk_group) for post_data in posts_for_group(vk_group.domain)])
+    post_ids = job().get()
     VkPost.objects \
-        .filter(group=group) \
+        .filter(group=vk_group) \
         .exclude(pk__in=post_ids).delete()
 
 
