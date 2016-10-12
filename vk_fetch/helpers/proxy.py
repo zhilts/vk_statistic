@@ -51,7 +51,7 @@ class ProxyManager(object):
 
     def get(self):
         proxy_list = self._get_cached_list()
-        if self._current == -1:
+        if self._current == -1 or len(proxy_list) == 0:
             return None
         self._current %= len(proxy_list)
         return proxy_list[self._current]
