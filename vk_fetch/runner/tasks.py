@@ -3,8 +3,10 @@ from __future__ import absolute_import
 from logging.config import dictConfig
 
 from celery import chain, group
+from celery import states
 from celery.utils.log import get_task_logger
 from django.conf import settings
+from djcelery.models import TaskMeta
 
 from entities.models import VkGroup
 from entities.models import VkUser
@@ -67,3 +69,10 @@ def add_invite(group_id, user_id, viewer_id):
 @app.task()
 def update_users(user_ids):
     return process_users_page(user_ids)
+
+
+@app.task()
+def clean_success_taskmeta():
+    TaskMeta.objects \
+        .filter(status=states.SUCCESS) \
+        .delete()
