@@ -79,6 +79,7 @@ class BaseTopView(ListView):
         qs = self.base_query \
                  .select_related('user') \
                  .filter(group=group) \
+                 .exclude(total_score=0) \
                  .annotate(current_user=Case(When(user_id=viewer_id, then=True),
                                              default=False,
                                              output_field=BooleanField())) \
