@@ -30,7 +30,8 @@ def process_post_data(post_data, group):
 
 def fetch_all(vk_group):
     job = group([process_post_data.si(post_data, vk_group) for post_data in posts_for_group(vk_group.domain)])
-    post_ids = job().get()
+    post_ids = job.apply_async().get()
+
     VkPost.objects \
         .filter(group=vk_group) \
         .exclude(pk__in=post_ids).delete()

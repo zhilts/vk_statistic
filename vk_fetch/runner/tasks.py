@@ -11,7 +11,7 @@ from entities.models import VkUser
 from entities.models.VkInvitation import VkInvitation
 from helpers.proxy import update_proxies
 from runner.fetching.groups import process_group
-from runner.fetching.users import update_users_info
+from runner.fetching.users import update_users_info, process_users_page
 from vk_fetch.celery import app
 
 logger = get_task_logger(__name__)
@@ -26,7 +26,7 @@ def reload_all_proxies():
 
 @app.task(trail=True)
 def fetch_all():
-    job = chain(reload_all_proxies.si(), update_groups.si(), update_users.si())
+    job = chain(reload_all_proxies.si(), update_groups.si(), update_all_users.si())
     job.apply_async()
 
 
@@ -47,7 +47,7 @@ def update_group(group_id):
 
 
 @app.task(trail=True)
-def update_users():
+def update_all_users():
     update_users_info()
 
 
@@ -62,3 +62,8 @@ def add_invite(group_id, user_id, viewer_id):
         VkInvitation.objects.create(group=group, user=viewer, invited_by=invited_by)
     except Exception as ex:
         logger.debug('invitation failed {err}'.format(err=ex))
+
+
+@app.task()
+def update_users(user_ids):
+    return process_users_page(user_ids)

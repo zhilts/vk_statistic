@@ -132,7 +132,7 @@ class UserGroupOverview(View):
         group_id = kwargs.get('group_id')
         try:
             user = VkUser.objects.get(id=user_id)
-            stats = VkUserStatisticTotal.objects.get(group__vk_id=group_id, user_id=user_id)
+            stats, _ = VkUserStatisticTotal.objects.get_or_create(group__vk_id=group_id, user_id=user_id)
         except ObjectDoesNotExist:
             raise Http404
 
