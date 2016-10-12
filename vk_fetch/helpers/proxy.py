@@ -116,4 +116,6 @@ def update_proxies():
     sorted_proxies = sorted(filtered_proxies, key=lambda x: x['timing'])
     proxy_urls = map(lambda x: x['host'], sorted_proxies)
 
-    ProxyManager.instance().update(list(proxy_urls))
+    proxy_list = list(proxy_urls)
+    ProxyManager.instance().update(proxy_list)
+    logger.info('proxy list updated = {proxy_list}'.format(proxy_list=proxy_list))
