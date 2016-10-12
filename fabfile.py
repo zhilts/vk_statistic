@@ -146,7 +146,7 @@ def move_link(version):
     run('sudo supervisorctl stop all')
     run('rm -f {current_link}'.format(current_link=current_link))
     run('ln -s {current_path} {current_link}'.format(current_path=current_path, current_link=current_link))
-    run('sudo supervisorctl update; sudo supervisorctl start all')
+    run('sudo supervisorctl reread; sudo supervisorctl update; sudo supervisorctl start all')
 
 
 @task()
