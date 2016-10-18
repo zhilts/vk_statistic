@@ -50,6 +50,11 @@
 }
 
 .sticky-wrap.user-details {
+    width: 100%;
+    margin: auto;
+}
+
+.sticky-wrap.user-details table {
     width: 300px;
     margin: auto;
 }

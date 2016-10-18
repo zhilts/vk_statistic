@@ -127,6 +127,16 @@ class GroupPeriodsView(ListView):
         return context
 
 
+def get_rates():
+    return dict(
+        likes=1,
+        reposts=1,
+        likes_for_reposts=1,
+        reposts_for_reposts=1,
+        invites=1,
+    )
+
+
 class UserGroupOverview(View):
     def get(self, request, *args, **kwargs):
         user_id = kwargs.get('user_id')
@@ -138,9 +148,4 @@ class UserGroupOverview(View):
             raise Http404
 
         return render(request, 'entities/group_user.html',
-                      dict(user=user, stats=stats, group_id=group_id, current_user_id=user_id))
-
-    def get_context_data(self, **kwargs):
-        context = super(UserGroupOverview, self).get_context_data(**kwargs)
-        context['current_user_id'] = get_viewer_id()
-        return context
+                      dict(user=user, stats=stats, group_id=group_id, current_user_id=user_id, rates=get_rates()))

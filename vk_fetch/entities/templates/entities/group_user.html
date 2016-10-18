@@ -4,38 +4,68 @@
     <h3 class="title">
         {{ user.first_name }} {{ user.last_name }}
     </h3>
-    <div class="sticky-wrap user-details">
-        <table border="1">
-            <tbody>
-            <tr>
-                <th>{% trans 'Rating' %}</th>
-                <td>{{ stats.rating }}</td>
-            </tr>
-            <tr>
-                <th>{% trans 'Karma' %}</th>
-                <td>{{ stats.total_score }}</td>
-            </tr>
-            <tr>
-                <th>{% trans 'Likes' %}</th>
-                <td>{{ stats.likes }}</td>
-            </tr>
-            <tr>
-                <th>{% trans 'Reposts' %}</th>
-                <td>{{ stats.reposts }}</td>
-            </tr>
-            <tr>
-                <th>{% trans 'Likes for Reposts' %}</th>
-                <td>{{ stats.likes_for_reposts }}</td>
-            </tr>
-            <tr>
-                <th>{% trans 'Reposts for Reposts' %}</th>
-                <td>{{ stats.reposts_for_reposts }}</td>
-            </tr>
-            <tr>
-                <th>{% trans 'Invited' %}</th>
-                <td>{{ stats.invites }}</td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="">
+        <div class="sticky-wrap user-details">
+            <table border="1">
+                <tbody>
+                <tr>
+                    <th>
+                        {% trans 'Rating' %}
+                    </th>
+                    <td>
+                        {{ stats.rating }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {% trans 'Karma' %}
+                    </th>
+                    <td>
+                        {{ stats.total_score }}
+                    </td>
+                </tr>
+                <tr>
+                    <th tooltip="{% trans 'For each like you will get' %} +{{ rates.likes }} {% trans 'for your karma' %}">
+                        {% trans 'Likes' %} (x{{ rates.likes }})
+                    </th>
+                    <td>
+                        {{ stats.likes }}
+                    </td>
+                </tr>
+                <tr>
+                    <th tooltip="{% trans 'For each repost you will get' %} +{{ rates.reposts }} {% trans 'for your karma' %}">
+                        {% trans 'Reposts' %} (x1)
+                    </th>
+                    <td>
+                        {{ stats.reposts }}
+                    </td>
+                </tr>
+                <tr>
+                    <th tooltip="{% trans 'For each like on your repost you will get' %} +{{ rates.likes_for_reposts }} {% trans 'for your karma' %}">
+                        {% trans 'Likes for Reposts' %} (x1)
+                    </th>
+                    <td>
+                        {{ stats.likes_for_reposts }}
+                    </td>
+                </tr>
+                <tr>
+                    <th tooltip="{% trans 'For each repost of your repost you will get' %} +{{ rates.reposts_for_reposts }} {% trans 'for your karma' %}">
+                        {% trans 'Reposts for Reposts' %} (x1)
+                    </th>
+                    <td>
+                        {{ stats.reposts_for_reposts }}
+                    </td>
+                </tr>
+                <tr>
+                    <th tooltip="{% trans 'For each new player from your invites you will get' %} +{{ rates.invites }} {% trans 'for your karma' %}">
+                        {% trans 'Invited' %} (x1)
+                    </th>
+                    <td>
+                        {{ stats.invites }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
