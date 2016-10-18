@@ -28,3 +28,11 @@ def start_of_current_period(now=None):
     run_start = settings[SettingsKey.PERIOD_START]
     run_period = settings[SettingsKey.PERIOD_DURATION]
     return run_start + int((now - run_start) / run_period) * run_period
+
+
+def end_of_period(now=None):
+    now = now or get_now()
+    settings = period_settings()
+    start_of_the_period = start_of_current_period(now)
+    run_period = settings[SettingsKey.PERIOD_DURATION]
+    return start_of_the_period + run_period

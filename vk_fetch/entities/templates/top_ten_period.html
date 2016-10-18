@@ -1,0 +1,23 @@
+{% extends 'top_ten.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "top_ten_period.css" %}">
+
+{% endblock %}
+{% block content %}
+    {{ block.super }}
+
+    <div class="stopwatch">{% trans 'Cycle will end' %} <span id="stopwatch"></span></div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment-with-locales.js"></script>
+    <script type="text/javascript" src="{% static "stopwatch.js" %}"></script>
+    <script type="text/javascript">
+        startStopWatch('stopwatch', '{{ end_of_period }}');
+    </script>
+{% endblock %}

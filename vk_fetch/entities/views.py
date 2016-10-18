@@ -11,7 +11,7 @@ from entities.models import VkGroup, VkPost, VkUser, VkUserStatisticTotal
 from entities.models.RunPeriod import RunPeriod
 from entities.models.Settings import SettingsKey
 from entities.models.VkUserStatistic import VkUserStatisticPeriod
-from helpers.datetime import start_of_current_period
+from helpers.datetime import start_of_current_period, end_of_period
 from helpers.settings import rate_settings
 from runner.tasks import add_invite
 
@@ -99,10 +99,17 @@ class UserTopTenView(BaseTopView):
 
 
 class UserTopTenPeriod(BaseTopView):
+    template_name = 'top_ten_period.html'
+
     def get_queryset(self):
         period_id = self.kwargs.get('period_id', 0)
         self.base_query = VkUserStatisticPeriod.objects.filter(period_id=period_id)
         return super(UserTopTenPeriod, self).get_queryset()
+
+    def get_context_data(self, **kwargs):
+        context = super(UserTopTenPeriod, self).get_context_data(**kwargs)
+        context['end_of_period'] = end_of_period().isoformat()
+        return context
 
 
 class CurrentPeriodTopTen(View):
