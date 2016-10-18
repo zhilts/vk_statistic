@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from django.utils import timezone
 
-from django.conf import settings
+from entities.models.Settings import SettingsKey
+from helpers.settings import period_settings
 
 
 def get_now():
@@ -23,6 +24,7 @@ def start_of_week(ts):
 
 def start_of_current_period(now=None):
     now = now or get_now()
-    run_start = settings.RUN_START
-    run_period = settings.RUN_PERIOD
+    settings = period_settings()
+    run_start = settings[SettingsKey.PERIOD_START]
+    run_period = settings[SettingsKey.PERIOD_DURATION]
     return run_start + int((now - run_start) / run_period) * run_period

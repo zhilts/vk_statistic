@@ -9,8 +9,10 @@ from requests import session
 
 from entities.models import VkGroup, VkPost, VkUser, VkUserStatisticTotal
 from entities.models.RunPeriod import RunPeriod
+from entities.models.Settings import SettingsKey
 from entities.models.VkUserStatistic import VkUserStatisticPeriod
 from helpers.datetime import start_of_current_period
+from helpers.settings import rate_settings
 from runner.tasks import add_invite
 
 
@@ -117,7 +119,7 @@ class GroupPeriodsView(ListView):
 
     def get_queryset(self):
         group_id = self.kwargs.get('group_id')
-        return RunPeriod.objects.filter(vkuserstatisticperiod__group__vk_id=group_id).distinct()
+        return RunPeriod.objects.filter(vkuserstatisticperiod__group__vk_id=group_id).distinct().order_by('timestamp')
 
     def get_context_data(self, **kwargs):
         context = super(GroupPeriodsView, self).get_context_data(**kwargs)
@@ -128,12 +130,13 @@ class GroupPeriodsView(ListView):
 
 
 def get_rates():
+    rates = rate_settings()
     return dict(
-        likes=1,
-        reposts=1,
-        likes_for_reposts=1,
-        reposts_for_reposts=1,
-        invites=1,
+        likes=rates[SettingsKey.RATE_LIKES],
+        reposts=rates[SettingsKey.RATE_REPOSTS],
+        likes_for_reposts=rates[SettingsKey.RATE_LIKES_FOR_REPOSTS],
+        reposts_for_reposts=rates[SettingsKey.RATE_REPOSTS_FOR_REPOSTS],
+        invites=rates[SettingsKey.RATE_INVITES],
     )
 
 

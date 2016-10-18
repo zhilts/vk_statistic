@@ -209,9 +209,3 @@ REDIS_STORAGE = {
         'DB': 1
     }
 }
-
-from datetime import datetime, timedelta, timezone
-import pytz
-
-RUN_START = pytz.UTC.localize(datetime(year=2016, month=10, day=1))
-RUN_PERIOD = timedelta(days=3)

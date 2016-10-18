@@ -34,7 +34,7 @@
                 </tr>
                 <tr>
                     <th tooltip="{% trans 'For each repost you will get' %} +{{ rates.reposts }} {% trans 'for your karma' %}">
-                        {% trans 'Reposts' %} (x1)
+                        {% trans 'Reposts' %} (x{{ rates.reposts }})
                     </th>
                     <td>
                         {{ stats.reposts }}
@@ -42,7 +42,7 @@
                 </tr>
                 <tr>
                     <th tooltip="{% trans 'For each like on your repost you will get' %} +{{ rates.likes_for_reposts }} {% trans 'for your karma' %}">
-                        {% trans 'Likes for Reposts' %} (x1)
+                        {% trans 'Likes for Reposts' %} (x{{ rates.likes_for_reposts }})
                     </th>
                     <td>
                         {{ stats.likes_for_reposts }}
@@ -50,7 +50,7 @@
                 </tr>
                 <tr>
                     <th tooltip="{% trans 'For each repost of your repost you will get' %} +{{ rates.reposts_for_reposts }} {% trans 'for your karma' %}">
-                        {% trans 'Reposts for Reposts' %} (x1)
+                        {% trans 'Reposts for Reposts' %} (x{{ rates.reposts_for_reposts }})
                     </th>
                     <td>
                         {{ stats.reposts_for_reposts }}
@@ -58,7 +58,7 @@
                 </tr>
                 <tr>
                     <th tooltip="{% trans 'For each new player from your invites you will get' %} +{{ rates.invites }} {% trans 'for your karma' %}">
-                        {% trans 'Invited' %} (x1)
+                        {% trans 'Invited' %} (x{{ rates.invites }})
                     </th>
                     <td>
                         {{ stats.invites }}

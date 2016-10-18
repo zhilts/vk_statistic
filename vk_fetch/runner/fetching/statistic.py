@@ -4,9 +4,11 @@ from django.db.models import F, Sum
 from entities.models import VkUserStatisticTotal, VkUser, VkUserStatisticHourly, VkUserStatisticWeekly, \
     VkUserStatisticDaily
 from entities.models.RunPeriod import RunPeriod
+from entities.models.Settings import SettingsKey
 from entities.models.VkInvitation import VkInvitation
 from entities.models.VkUserStatistic import VkUserStatisticPeriod
 from helpers.datetime import get_now, start_of_current_period, start_of_an_hour, start_of_day, start_of_week
+from helpers.settings import rate_settings
 
 
 def update_users_statistic(group):
@@ -57,16 +59,22 @@ def update_users_statistic(group):
     update_rating(group.pk, current_run_period)
 
 
-def update_total_score_base(group, query):
+def update_total_score_base(group, query, rates):
     query \
         .filter(group=group) \
-        .update(
-        total_score=F('likes') + F('reposts') + F('likes_for_reposts') + F('reposts_for_reposts') + F('invites'))
+        .update(total_score=
+                F('likes') * rates[SettingsKey.RATE_LIKES]
+                + F('reposts') * rates[SettingsKey.RATE_REPOSTS]
+                + F('likes_for_reposts') * rates[SettingsKey.RATE_LIKES_FOR_REPOSTS]
+                + F('reposts_for_reposts') * rates[SettingsKey.RATE_REPOSTS_FOR_REPOSTS]
+                + F('invites') * rates[SettingsKey.RATE_INVITES]
+                )
 
 
 def update_total_score(group, period):
-    update_total_score_base(group, VkUserStatisticTotal.objects)
-    update_total_score_base(group, VkUserStatisticPeriod.objects.filter(period=period))
+    rates = rate_settings()
+    update_total_score_base(group, VkUserStatisticTotal.objects, rates)
+    update_total_score_base(group, VkUserStatisticPeriod.objects.filter(period=period), rates)
 
 
 def update_rating_total(group_id, table_name):
