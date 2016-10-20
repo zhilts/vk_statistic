@@ -5,7 +5,6 @@ from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.views.generic import View
-from requests import session
 
 from entities.models import VkGroup, VkPost, VkUser, VkUserStatisticTotal
 from entities.models.RunPeriod import RunPeriod
@@ -46,10 +45,6 @@ class UserLikesListView(ListView):
         return post.likes.all()
 
 
-def get_viewer_id():
-    return getattr(session, 'user_id', 0)
-
-
 class BaseTopView(ListView):
     template_name = 'top_ten.html'
 
@@ -61,7 +56,7 @@ class BaseTopView(ListView):
     def get_context_data(self, **kwargs):
         context = super(BaseTopView, self).get_context_data(**kwargs)
         context['group_id'] = self.group_id
-        context['current_user_id'] = get_viewer_id()
+
         context['end_of_period'] = end_of_period().isoformat()
         return context
 
@@ -74,7 +69,7 @@ class BaseTopView(ListView):
             add_invite.delay(group_id=group_id, viewer_id=viewer_id, user_id=user_id)
 
     def get_queryset(self):
-        viewer_id = get_viewer_id()
+        viewer_id = int(self.request.GET.get('viewer_id', 0))
         self.group_id = int(self.kwargs.get('group_id'))
         self.update_invites(viewer_id, self.request.GET)
 
@@ -127,7 +122,6 @@ class GroupPeriodsView(ListView):
         context = super(GroupPeriodsView, self).get_context_data(**kwargs)
         group = VkGroup.objects.get(vk_id=self.kwargs.get('group_id'))
         context['group'] = group
-        context['current_user_id'] = getattr(session, 'user_id', 0)
         return context
 
 
@@ -153,5 +147,5 @@ class UserGroupOverview(View):
             raise Http404
 
         return render(request, 'entities/group_user.html',
-                      dict(user=user, stats=stats, group_id=group_id, current_user_id=user_id, rates=get_rates(),
+                      dict(user=user, stats=stats, group_id=group_id, rates=get_rates(),
                            end_of_period=end_of_period().isoformat()))
