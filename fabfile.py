@@ -134,6 +134,7 @@ def upload_src(version):
     run('tar zxf /tmp/src.tgz -C {path}'.format(path=current_path))
     run('rm -rf /tmp/src.tgz')
     with cd(current_path):
+        run('sudo supervisorctl stop celery-workers')
         run('./pysetup.sh')
         run('./pyenv.sh ./manage.py migrate --run-syncdb')
         run('./pyenv.sh ./manage.py collectstatic --noinput')
