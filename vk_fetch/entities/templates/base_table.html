@@ -10,6 +10,7 @@
     {% endblock %}
 </head>
 <body>
+<div class="stopwatch">{% trans 'Cycle will end in' %} <span id="stopwatch"></span></div>
 <div class="context">
     <a href="{% url 'group-user' group_id=group_id user_id=current_user_id %}">
         <button>
@@ -32,6 +33,12 @@
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment-with-locales.js"></script>
+    <script type="text/javascript" src="{% static "stopwatch.js" %}"></script>
+    <script type="text/javascript">
+        startStopWatch('stopwatch', '{{ end_of_period }}');
+    </script>
 {% endblock %}
 
 </body>

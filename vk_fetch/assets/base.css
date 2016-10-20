@@ -58,3 +58,9 @@
     width: 300px;
     margin: auto;
 }
+
+.stopwatch {
+    text-align: center;
+    padding: 12px;
+    font-weight: bold;
+}

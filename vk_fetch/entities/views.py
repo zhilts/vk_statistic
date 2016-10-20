@@ -62,6 +62,7 @@ class BaseTopView(ListView):
         context = super(BaseTopView, self).get_context_data(**kwargs)
         context['group_id'] = self.group_id
         context['current_user_id'] = get_viewer_id()
+        context['end_of_period'] = end_of_period().isoformat()
         return context
 
     # todo: move to middleware
@@ -99,17 +100,11 @@ class UserTopTenView(BaseTopView):
 
 
 class UserTopTenPeriod(BaseTopView):
-    template_name = 'top_ten_period.html'
 
     def get_queryset(self):
         period_id = self.kwargs.get('period_id', 0)
         self.base_query = VkUserStatisticPeriod.objects.filter(period_id=period_id)
         return super(UserTopTenPeriod, self).get_queryset()
-
-    def get_context_data(self, **kwargs):
-        context = super(UserTopTenPeriod, self).get_context_data(**kwargs)
-        context['end_of_period'] = end_of_period().isoformat()
-        return context
 
 
 class CurrentPeriodTopTen(View):
@@ -158,4 +153,5 @@ class UserGroupOverview(View):
             raise Http404
 
         return render(request, 'entities/group_user.html',
-                      dict(user=user, stats=stats, group_id=group_id, current_user_id=user_id, rates=get_rates()))
+                      dict(user=user, stats=stats, group_id=group_id, current_user_id=user_id, rates=get_rates(),
+                           end_of_period=end_of_period().isoformat()))
