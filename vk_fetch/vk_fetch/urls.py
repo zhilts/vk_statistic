@@ -19,7 +19,8 @@ from django.contrib import admin
 
 from django.conf import settings
 from entities.views import GroupListView, PostListView, UserListView, UserLikesListView, UserTopTenView, \
-    UserTopTenPeriod, CurrentPeriodTopTen, GroupPeriodsView, UserGroupOverview
+    UserTopTenPeriod, CurrentPeriodTopTen, GroupPeriodsView
+from entities.views.UserDetails import UserGroupOverview
 from vk_fetch.views import main_view
 
 import logging

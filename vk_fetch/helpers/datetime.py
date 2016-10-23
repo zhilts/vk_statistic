@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from django.utils import timezone
 
+from entities.models.RunPeriod import RunPeriod
 from entities.models.Settings import SettingsKey
 from helpers.settings import period_settings
 
@@ -36,3 +37,9 @@ def end_of_period(now=None):
     start_of_the_period = start_of_current_period(now)
     run_period = settings[SettingsKey.PERIOD_DURATION]
     return start_of_the_period + run_period
+
+
+def current_period():
+    current_period_start = start_of_current_period()
+    period, _ = RunPeriod.objects.get_or_create(timestamp=current_period_start)
+    return period

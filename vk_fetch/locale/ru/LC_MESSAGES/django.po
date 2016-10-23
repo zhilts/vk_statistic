@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-20 05:16+0000\n"
+"POT-Creation-Date: 2016-10-23 17:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,75 +20,34 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: entities/templates/base_table.html:16
+#: entities/templates/base_table.html:13
+msgid "Cycle will end in"
+msgstr "Круг завершится через"
+
+#: entities/templates/base_table.html:18
 msgid "My"
 msgstr "Моё"
 
-#: entities/templates/base_table.html:21
+#: entities/templates/base_table.html:24
+#: entities/templates/entities/group_user.html:14
 msgid "Total"
 msgstr "Всё"
 
-#: entities/templates/base_table.html:26
+#: entities/templates/base_table.html:29
 msgid "Last 3 days"
 msgstr "За 3 дня"
 
 #: entities/templates/entities/group_user.html:13
-#: entities/templates/top_ten.html:7
+msgid "Cycle"
+msgstr "Круг"
+
+#: entities/templates/top_ten.html:7 entities/views/UserDetails.py:68
 msgid "Rating"
 msgstr "Место"
 
-#: entities/templates/entities/group_user.html:21
-#: entities/templates/top_ten.html:8
+#: entities/templates/top_ten.html:8 entities/views/UserDetails.py:69
 msgid "Karma"
 msgstr "Карма"
-
-#: entities/templates/entities/group_user.html:28
-msgid "For each like you will get"
-msgstr "За каждый лайк вы получаете"
-
-#: entities/templates/entities/group_user.html:28
-#: entities/templates/entities/group_user.html:36
-#: entities/templates/entities/group_user.html:44
-#: entities/templates/entities/group_user.html:52
-#: entities/templates/entities/group_user.html:60
-msgid "for your karma"
-msgstr "к карме"
-
-#: entities/templates/entities/group_user.html:29
-msgid "Likes"
-msgstr "Лайки"
-
-#: entities/templates/entities/group_user.html:36
-msgid "For each repost you will get"
-msgstr "За каждый репост вы получаете"
-
-#: entities/templates/entities/group_user.html:37
-msgid "Reposts"
-msgstr "Репосты"
-
-#: entities/templates/entities/group_user.html:44
-msgid "For each like on your repost you will get"
-msgstr "За каждый лайк вашего репоста вы получаете"
-
-#: entities/templates/entities/group_user.html:45
-msgid "Likes for Reposts"
-msgstr "Лайки репостов"
-
-#: entities/templates/entities/group_user.html:52
-msgid "For each repost of your repost you will get"
-msgstr "За каждый репост вашего репоста вы получаете"
-
-#: entities/templates/entities/group_user.html:53
-msgid "Reposts for Reposts"
-msgstr "Репосты репостов"
-
-#: entities/templates/entities/group_user.html:60
-msgid "For each new player from your invites you will get"
-msgstr "За каждого друга, пришедшего по вашему приглашению вы получаете"
-
-#: entities/templates/entities/group_user.html:61
-msgid "Invited"
-msgstr "Приглашения"
 
 #: entities/templates/top_ten.html:9
 msgid "Avatar"
@@ -102,14 +61,54 @@ msgstr "Имя"
 msgid "No activity detected"
 msgstr "Пока активности не обнаружено"
 
-#: entities/templates/top_ten_period.html:12
-msgid "Cycle will end in"
-msgstr "Круг завершится через"
+#: entities/views/UserDetails.py:60
+msgid "For each like you will get"
+msgstr "За каждый лайк вы получаете"
 
-#: settings/settings.py:118
+#: entities/views/UserDetails.py:61
+msgid "For each repost you will get"
+msgstr "За каждый репост вы получаете"
+
+#: entities/views/UserDetails.py:62
+msgid "For each like on your repost you will get"
+msgstr "За каждый лайк вашего репоста вы получаете"
+
+#: entities/views/UserDetails.py:63
+msgid "For each repost of your repost you will get"
+msgstr "За каждый репост вашего репоста вы получаете"
+
+#: entities/views/UserDetails.py:64
+msgid "For each new player from your invites you will get"
+msgstr "За каждого друга, пришедшего по вашему приглашению вы получаете"
+
+#: entities/views/UserDetails.py:70
+msgid "Likes"
+msgstr "Лайки"
+
+#: entities/views/UserDetails.py:71
+msgid "Reposts"
+msgstr "Репосты"
+
+#: entities/views/UserDetails.py:72
+msgid "Likes for Reposts"
+msgstr "Лайки репостов"
+
+#: entities/views/UserDetails.py:73
+msgid "Reposts for Reposts"
+msgstr "Репосты репостов"
+
+#: entities/views/UserDetails.py:74
+msgid "Invited"
+msgstr "Приглашения"
+
+#: entities/views/UserDetails.py:80
+msgid "for your karma"
+msgstr "к карме"
+
+#: settings/settings.py:117
 msgid "English"
 msgstr "Английский"
 
-#: settings/settings.py:119
+#: settings/settings.py:118
 msgid "Russian"
 msgstr "Русский"

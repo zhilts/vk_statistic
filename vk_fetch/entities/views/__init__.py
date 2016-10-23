@@ -1,18 +1,12 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Value, Case, When, BooleanField
 from django.db.models.functions import Concat
-from django.http import Http404
-from django.shortcuts import render
 from django.views.generic import ListView
 from django.views.generic import View
-from django.utils.translation import ugettext as _
 
 from entities.models import VkGroup, VkPost, VkUser, VkUserStatisticTotal
 from entities.models.RunPeriod import RunPeriod
-from entities.models.Settings import SettingsKey
 from entities.models.VkUserStatistic import VkUserStatisticPeriod
-from helpers.datetime import start_of_current_period, end_of_period
-from helpers.settings import rate_settings
+from helpers.datetime import end_of_period, current_period
 from runner.tasks import add_invite
 
 
@@ -102,12 +96,6 @@ class UserTopTenPeriod(BaseTopView):
         return super(UserTopTenPeriod, self).get_queryset()
 
 
-def current_period():
-    current_period_start = start_of_current_period()
-    period, _ = RunPeriod.objects.get_or_create(timestamp=current_period_start)
-    return period
-
-
 class CurrentPeriodTopTen(View):
     def get(self, request, *args, **kwargs):
         view = UserTopTenPeriod.as_view()
@@ -127,78 +115,3 @@ class GroupPeriodsView(ListView):
         group = VkGroup.objects.get(vk_id=self.kwargs.get('group_id'))
         context['group'] = group
         return context
-
-
-def get_rates():
-    rates = rate_settings()
-    return dict(
-        likes=rates[SettingsKey.RATE_LIKES],
-        reposts=rates[SettingsKey.RATE_REPOSTS],
-        likes_for_reposts=rates[SettingsKey.RATE_LIKES_FOR_REPOSTS],
-        reposts_for_reposts=rates[SettingsKey.RATE_REPOSTS_FOR_REPOSTS],
-        invites=rates[SettingsKey.RATE_INVITES],
-    )
-
-
-def title_with_rate(title, rate):
-    return '{title} (x{rate})'.format(title=_(title), rate=rate)
-
-
-def get_titles(rates):
-    return _('Rating'), \
-           _('Karma'), \
-           title_with_rate('Likes', rates['likes']), \
-           title_with_rate('Reposts', rates['reposts']), \
-           title_with_rate('Likes for Reposts', rates['likes_for_reposts']), \
-           title_with_rate('Reposts for Reposts', rates['reposts_for_reposts']), \
-           title_with_rate('Invited', rates['invites'])
-
-
-def tooltip_with_rate(tooltip, rate):
-    return '{tooltip} +{rate} {tooltip_suffix}'.format(tooltip=_(tooltip), rate=rate,
-                                                       tooltip_suffix=_('for your karma'))
-
-
-def get_tooltips(rates):
-    return None, \
-           None, \
-           tooltip_with_rate('For each like you will get', rates['likes']), \
-           tooltip_with_rate('For each repost you will get', rates['reposts']), \
-           tooltip_with_rate('For each like on your repost you will get', rates['likes_for_reposts']), \
-           tooltip_with_rate('For each repost of your repost you will get', rates['reposts_for_reposts']), \
-           tooltip_with_rate('For each new player from your invites you will get', rates['invites'])
-
-
-def build_table(stats, period_stats):
-    rates = get_rates()
-    titles = get_titles(rates)
-    tooltips = get_tooltips(rates)
-    keys = ['rating', 'total_score', 'likes', 'reposts', 'likes_for_reposts', 'reposts_for_reposts', 'invites']
-    return [dict(
-        title=titles[index],
-        tooltip=tooltips[index],
-        total_stat=getattr(stats, key),
-        period_stat=getattr(period_stats, key)) for
-            (index, key) in enumerate(keys)]
-
-
-class UserGroupOverview(View):
-    def get(self, request, *args, **kwargs):
-        user_id = kwargs.get('user_id')
-        group_id = kwargs.get('group_id')
-        try:
-            user = VkUser.objects.get(id=user_id)
-            period = current_period()
-            group = VkGroup.objects.get(vk_id=group_id)
-            stats, _ = VkUserStatisticTotal.objects.get_or_create(group=group, user_id=user_id)
-            period_stats, _ = VkUserStatisticPeriod.objects.get_or_create(group=group, user_id=user_id,
-                                                                          period=period)
-
-            stat_table = build_table(stats=stats, period_stats=period_stats)
-
-        except ObjectDoesNotExist:
-            raise Http404
-
-        return render(request, 'entities/group_user.html',
-                      dict(user=user, stats=stat_table, group_id=group_id,
-                           end_of_period=end_of_period().isoformat()))
