@@ -27,13 +27,27 @@ LOGGING = {
         },
     },
     'loggers': {
-        'runner.tasks': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
+        'loggers': {
+            'runner': {
+                'handlers': ['console'],
+                'level': 'WARNING',
+            },
+            'django.views.static.serve': {
+                'handlers': ['console'],
+                'level': 'WARNING',
+            },
+            'vk_api': {
+                'handlers': ['console'],
+                'level': 'WARNING',
+            },
+            'vk_fetch': {
+                'handlers': ['console'],
+                'level': 'WARNING',
+            },
+            '': {
+                'handlers': ['console'],
+                'level': 'WARNING',
+            }
         },
-        'vk_api': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        }
     }
 }
