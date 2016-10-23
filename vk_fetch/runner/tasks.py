@@ -28,16 +28,16 @@ def reload_all_proxies():
 
 @app.task(trail=True)
 def fetch_all():
-    job = chain(reload_all_proxies.si(), update_groups.si(), update_all_users.si())
-    job.apply_async()
+    job = chain(reload_all_proxies.si(), update_groups.si(), update_all_users.si())()
+    return job.get()
 
 
 @app.task(trail=True)
 def update_groups():
     job = group([update_group.si(group_id) for group_id in
-                 VkGroup.objects.filter(active=True).values_list('pk', flat=True)])
+                 VkGroup.objects.filter(active=True).values_list('pk', flat=True)])()
 
-    job.apply_async()
+    return job.get()
 
 
 @app.task(trail=True)

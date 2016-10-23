@@ -169,34 +169,31 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'standard'
         },
-        'celery': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'logs/celery.log',
-            'formatter': 'standard',
-            'maxBytes': 1024 * 1024 * 100,  # 100 mb
-        },
     },
     'loggers': {
+        'celery': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
         'runner': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
         'django.views.static.serve': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'WARNING',
         },
         'vk_api': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'WARNING',
         },
         'vk_fetch': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'WARNING',
         },
         '': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'WARNING',
         }
     },
 }
