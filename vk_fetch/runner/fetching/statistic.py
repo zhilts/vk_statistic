@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.db import connection
 from django.db.models import F, Sum
 
@@ -13,10 +14,10 @@ from helpers.settings import rate_settings
 
 def update_users_statistic(group):
     now = get_now()
-    current_hour = start_of_an_hour(now)
-    current_date = start_of_day(now)
-    current_week = start_of_week(now)
-    current_run_start = start_of_current_period(now)
+    current_hour = start_of_an_hour(now) - timedelta(hours=1)
+    current_date = start_of_day(current_hour)
+    current_week = start_of_week(current_hour)
+    current_run_start = start_of_current_period(current_hour)
     current_run_period, _ = RunPeriod.objects.get_or_create(timestamp=current_run_start)
 
     def get_sum(s, column):
