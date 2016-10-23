@@ -5,20 +5,23 @@
     opacity: 0;
 
     /* customizable */
+    pointer-events: none;
     transition: all 0.15s ease;
     padding: 10px;
     color: #333;
     border-radius: 10px;
     box-shadow: 2px 2px 1px silver;
+    white-space: normal;
 }
 
 [tooltip]:hover:before {
     /* needed - do not touch */
+    border: none;
     opacity: 1;
-    z-index: 500;
+    /*z-index: 500;*/
 
     /* customizable */
     background: white;
     margin-top: -50px;
-    margin-left: 20px;
+    /*margin-left: 20px;*/
 }

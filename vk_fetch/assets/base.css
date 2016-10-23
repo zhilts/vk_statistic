@@ -41,6 +41,10 @@
     text-align: center;
 }
 
+.sticky-wrap {
+    position: static;
+}
+
 .sticky-wrap.user-details tr th {
     width: 200px;
 }
@@ -63,4 +67,13 @@
     text-align: center;
     padding: 12px;
     font-weight: bold;
+}
+
+tr:before {
+    /* fix for tr tooltips */
+    content: '';
+}
+
+tbody th {
+    background-color: #31bc86;
 }
