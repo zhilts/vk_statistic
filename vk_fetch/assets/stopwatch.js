@@ -7,7 +7,7 @@ function startStopWatch(stopwatchId, expirationDate) {
     function update() {
         var duration = moment.duration(moment(expirationDate) - moment()),
             hours = Math.trunc(duration.asHours()),
-            minutes = duration.minutes();
+            minutes = ('00' + duration.minutes()).substr(-2);
         view.textContent = hours + ':' + minutes;
     }
 
