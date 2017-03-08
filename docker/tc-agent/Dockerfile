@@ -2,6 +2,7 @@ FROM ubuntu:trusty
 
 RUN apt-get update
 RUN apt-get install -y wget unzip git python-setuptools python-pip gcc python-dev build-essential libssl-dev libffi-dev
+RUN pip install -U pip setuptools
 RUN pip install Fabric3
 
 # SSH KEYGEN
