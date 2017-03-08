@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/vk-fetch.iml" filepath="$PROJECT_DIR$/.idea/vk-fetch.iml" />
-      <module fileurl="file://$PROJECT_DIR$/vk_fetch/vk_fetch.iml" filepath="$PROJECT_DIR$/vk_fetch/vk_fetch.iml" />
     </modules>
   </component>
 </project>

@@ -137,3 +137,4 @@ media
 
 ### Vagrant ###
 .vagrant
+/vk_fetch/celerybeat.pid

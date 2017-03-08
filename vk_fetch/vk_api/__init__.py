@@ -3,6 +3,7 @@ import logging
 import requests
 from django.core.paginator import Paginator
 
+from helpers.datetime import from_unix_time
 from helpers.proxy import ProxyManager
 
 try:
@@ -154,6 +155,16 @@ def posts_for_group(group_domain):
             filter='all'
         )
     )
+
+
+def posts_for_group_in_period(group_domain, start_date):
+    for post in posts_for_group(group_domain):
+        post_timestamp = from_unix_time(post.get('date', 0))
+        if post_timestamp >= start_date:
+            yield post
+        else:
+            logger.debug('skipping {post_id}'.format(post_id=post.get('id', None)))
+            break
 
 
 def likes_for_post(post_id, owner_id):

@@ -15,9 +15,9 @@ def process_users_page(users_ids):
         )
 
 
-
-def update_users_info():
-    user_ids_qs = VkUser.objects \
-        .values_list('id', flat=True) \
-        .order_by('id')
-    paged_process(user_ids_qs, process_users_page, page_size=1000)
+def update_users_info(user_ids=None):
+    if user_ids is None:
+        user_ids = VkUser.objects \
+            .values_list('id', flat=True) \
+            .order_by('id')
+    paged_process(user_ids, process_users_page, page_size=1000)

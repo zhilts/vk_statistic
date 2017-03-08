@@ -3,17 +3,9 @@
     "model": "entities.vkgroup",
     "pk": 1,
     "fields": {
-      "vk_id": 33081221,
-      "domain": "de_lord"
-    }
-  },
-  {
-    "model": "entities.vkgroup",
-    "pk": 2,
-    "fields": {
       "vk_id": 1253571,
       "domain": "sigmasoftware",
-      "active": false
+      "active": true
     }
   }
 ]

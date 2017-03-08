@@ -24,7 +24,10 @@ class ProxyStorage(object):
         return self.redis.set(self.KEY, pickle.dumps(proxy_list))
 
     def get(self):
-        return pickle.loads(self.redis.get(self.KEY))
+        saved_proxies = self.redis.get(self.KEY)
+        if saved_proxies is None:
+            return []
+        return pickle.loads(saved_proxies)
 
 
 class ProxyManager(object):
@@ -110,7 +113,9 @@ def update_proxies():
 
     job = group([test_proxy.si(proxy) for proxy in https_proxies])
 
-    test_proxies = job.apply_async().get()
+    print('staaaaart')
+    test_proxies = job().get()
+    print('finish')
 
     filtered_proxies = filter(lambda x: x is not None, test_proxies)
     sorted_proxies = sorted(filtered_proxies, key=lambda x: x['timing'])

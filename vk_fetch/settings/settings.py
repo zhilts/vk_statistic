@@ -173,11 +173,11 @@ LOGGING = {
     'loggers': {
         'celery': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'WARNING',
         },
         'runner': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
         },
         'django.views.static.serve': {
             'handlers': ['console'],

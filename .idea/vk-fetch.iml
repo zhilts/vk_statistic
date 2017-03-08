@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="JRUBY" name="JRuby">
-      <configuration>
-        <JRUBY_FACET_CONFIG_ID NAME="JRUBY_SDK_NAME" VALUE="" />
-        <LOAD_PATH number="0" />
-        <I18N_FOLDERS number="0" />
-      </configuration>
-    </facet>
-    <facet type="Python" name="Python">
-      <configuration sdkName="VK" />
-    </facet>
-  </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/dist" />
+      <sourceFolder url="file://$MODULE_DIR$/vk_fetch" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/vk_fetch/env" />
     </content>
     <orderEntry type="jdk" jdkName="VK" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="VK interpreter library" level="application" />
   </component>
   <component name="TemplatesService">
-    <option name="TEMPLATE_CONFIGURATION" value="Django" />
+    <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/vk_fetch/entities/templates" />
+      </list>
+    </option>
+  </component>
+  <component name="TestRunnerService">
+    <option name="PROJECT_TEST_RUNNER" value="Unittests" />
   </component>
 </module>

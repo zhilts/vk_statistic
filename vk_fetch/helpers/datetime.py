@@ -10,6 +10,14 @@ def get_now():
     return datetime.now(timezone.utc)
 
 
+def create_datetime(*args):
+    return datetime(*args, tzinfo=timezone.utc)
+
+
+def from_unix_time(unix_time: int):
+    return datetime.fromtimestamp(unix_time, tz=timezone.utc)
+
+
 def start_of_an_hour(ts):
     return ts.replace(minute=0, second=0, microsecond=0, tzinfo=timezone.utc)
 

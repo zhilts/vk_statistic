@@ -24,11 +24,21 @@
   file.directory:
     - makedirs: True
 
+# for ubuntu 14.04
+postgress_repo:
+  pkgrepo.managed:
+    - humanname: Postgres 9.4 for ubuntu 14.04
+    - name: deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main
+    - gpgcheck: 1
+    - key_url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
 postgres-pkg:
   pkg.installed:
       - pkgs:
         - postgresql-{{pgVer}}
         - postgresql-server-dev-{{pgVer}}
+  require:
+    - pkgrepo: postgress_repo
 
 /etc/postgres/conf.d:
   file.directory:

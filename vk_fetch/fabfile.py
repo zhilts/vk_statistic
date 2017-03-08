@@ -53,6 +53,11 @@ def celery_beat():
     celery('beat')
 
 
+@task()
+def list_celery_tasks():
+    celery('inspect registered')
+
+
 @task(alias='mkm')
 def make_migrations():
     manage('makemigrations')

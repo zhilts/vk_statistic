@@ -9,7 +9,7 @@ VAGRANTFILE_API_VERSION = "2"
 require 'yaml'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = 'larryli/vivid64'
+  config.vm.box = 'ubuntu/trusty64'
 
   config.vm.define 'dev' do |srv|
 
@@ -22,8 +22,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.memory = '1024'
     end
 
-    srv.vm.synced_folder 'saltstack/base', '/srv/', nfs: true
-    srv.vm.synced_folder './', '/home/vagrant/vk-fetch', nfs: true
+    srv.vm.synced_folder 'saltstack/base', '/srv/', nfs: false
+    srv.vm.synced_folder './', '/home/vagrant/vk-fetch', nfs: false
 
     ## Salt Masterless Minion: https://www.vagrantup.com/docs/provisioning/salt.html
     # Requires salt plugin: vagrant plugin install vagrant-salt
@@ -35,6 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       salt.masterless = true
       # Bug with masterless and run_highstate: https://github.com/mitchellh/vagrant/issues/6915
       salt.run_highstate = true
+      salt.verbose = false
     end
 
     srv.vm.provision 'shell', path: 'scripts/vagrant-provision.sh', privileged: false

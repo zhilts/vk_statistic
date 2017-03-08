@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.db import connection
 from django.db.models import F, Sum
 
+from entities.models import VkPost
 from entities.models import VkUserStatisticTotal, VkUser, VkUserStatisticHourly, VkUserStatisticWeekly, \
     VkUserStatisticDaily
 from entities.models.RunPeriod import RunPeriod
