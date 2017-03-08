@@ -1,8 +1,8 @@
-FROM ubuntu
+FROM ubuntu:trusty
 
 RUN apt-get update
-RUN apt-get install -y wget unzip git python-setuptools gcc python-dev
-RUN easy_install Fabric3
+RUN apt-get install -y wget unzip git python-setuptools python-pip gcc python-dev build-essential libssl-dev libffi-dev
+RUN pip install Fabric3
 
 # SSH KEYGEN
 RUN ssh-keygen -b 1024 -C "teamcity agent" -t rsa -f ~/.ssh/id_rsa -N ''
