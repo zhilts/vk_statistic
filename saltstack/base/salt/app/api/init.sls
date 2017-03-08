@@ -17,6 +17,7 @@ agent-pkgs:
       - gcc
       - python3-dev
       - libffi-dev
+      - libssl-dev
       - python3-setuptools
 
 /usr/run/vk-fetch/api/releases:
