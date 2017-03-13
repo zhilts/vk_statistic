@@ -20,6 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     srv.vm.provider 'virtualbox' do |vb|
       vb.memory = '1024'
+      vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 10000]
     end
 
     srv.vm.synced_folder 'saltstack/base', '/srv/', nfs: false
