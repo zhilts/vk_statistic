@@ -79,7 +79,7 @@ _titles = {
     Row.LIKES_FOR_REPOSTS: lambda: _('Likes for Reposts'),
     Row.REPOSTS_FOR_REPOSTS: lambda: _('Reposts for Reposts'),
     Row.INVITES: lambda: _('Invited'),
-    Row.POSTS: lambda: _('Invited'),
+    Row.POSTS: lambda: _('Posts'),
     Row.LIKES_FOR_OWN_POSTS: lambda: _('Likes for Own Posts'),
     Row.REPOSTS_FOR_OWN_POSTS: lambda: _('Reposts for Own Posts'),
 }
