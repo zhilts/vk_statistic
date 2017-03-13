@@ -18,7 +18,7 @@ def update_group_info(group):
     return group
 
 def fetch_all(vk_group, period):
-    posts = posts_for_group_in_period(vk_group.domain, period.timestamp)
+    posts = posts_for_group_in_period(vk_group.domain,vk_group.owner_id, period.timestamp)
     jobs = [process_post_data.si(post_data, vk_group) for post_data in posts]
     return group(jobs)().get()
 

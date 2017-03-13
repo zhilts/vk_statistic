@@ -1,8 +1,8 @@
 from datetime import timedelta
+
 from django.db import connection
 from django.db.models import F, Sum
 
-from entities.models import VkPost
 from entities.models import VkUserStatisticTotal, VkUser, VkUserStatisticHourly, VkUserStatisticWeekly, \
     VkUserStatisticDaily
 from entities.models.RunPeriod import RunPeriod
@@ -32,12 +32,19 @@ def update_users_statistic(group):
         new_likes_for_reposts = get_sum(user.vkrepost_set, 'likes')
         new_reposts_for_reposts = get_sum(user.vkrepost_set, 'reposts')
         new_invites = VkInvitation.objects.filter(group=group, invited_by=user).count()
+        new_posts = user.vkpost_set
+        new_posts_count = new_posts.count()
+        new_likes_for_own_posts = get_sum(new_posts, 'likes_count')
+        new_reposts_for_own_posts = get_sum(new_posts, 'reposts_count')
 
         delta_likes = new_likes - total_statistic.likes
         delta_reposts = new_reposts - total_statistic.reposts
         delta_likes_for_reposts = new_likes_for_reposts - total_statistic.likes_for_reposts
         delta_reposts_for_reposts = new_reposts_for_reposts - total_statistic.reposts_for_reposts
         delta_invites = new_invites - total_statistic.invites
+        delta_posts = new_posts_count - total_statistic.posts
+        delta_likes_for_own_posts = new_likes_for_own_posts - total_statistic.likes_for_own_posts
+        delta_reposts_for_own_posts = new_reposts_for_own_posts - total_statistic.reposts_for_own_posts
 
         VkUserStatisticHourly.objects.get_or_create(user=user, group=group, timestamp=current_hour)
         VkUserStatisticDaily.objects.get_or_create(user=user, group=group, date=current_date)
@@ -49,7 +56,10 @@ def update_users_statistic(group):
             reposts=F('reposts') + delta_reposts,
             likes_for_reposts=F('likes_for_reposts') + delta_likes_for_reposts,
             reposts_for_reposts=F('reposts_for_reposts') + delta_reposts_for_reposts,
-            invites=F('invites') + delta_invites
+            invites=F('invites') + delta_invites,
+            posts=F('posts') + delta_posts,
+            likes_for_own_posts=F('likes_for_own_posts') + delta_likes_for_own_posts,
+            reposts_for_own_posts=F('reposts_for_own_posts') + delta_reposts_for_own_posts
         )
         VkUserStatisticHourly.objects.filter(user=user, group=group, timestamp=current_hour).update(**update)
         VkUserStatisticDaily.objects.filter(user=user, group=group, date=current_date).update(**update)
@@ -70,6 +80,9 @@ def update_total_score_base(group, query, rates):
                 + F('likes_for_reposts') * rates[SettingsKey.RATE_LIKES_FOR_REPOSTS]
                 + F('reposts_for_reposts') * rates[SettingsKey.RATE_REPOSTS_FOR_REPOSTS]
                 + F('invites') * rates[SettingsKey.RATE_INVITES]
+                + F('posts') * rates[SettingsKey.RATE_POSTS]
+                + F('likes_for_own_posts') * rates[SettingsKey.RATE_LIKES_FOR_OWN_POSTS]
+                + F('reposts_for_own_posts') * rates[SettingsKey.RATE_REPOSTS_FOR_OWN_POSTS]
                 )
 
 

@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('entities', '0002_auto_20161110_1939'),
     ]
@@ -90,6 +89,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='settings',
             name='key',
-            field=models.CharField(choices=[('rates.invites', 'rates.invites'), ('rates.likesForReposts', 'rates.likesForReposts'), ('rates.reposts', 'rates.reposts'), ('rates.likes', 'rates.likes'), ('period.duration', 'period.duration'), ('rates.repostsForReposts', 'rates.repostsForReposts'), ('period.start', 'period.start')], max_length=100, primary_key=True, serialize=False),
+            field=models.CharField(
+                choices=[('rates.invites', 'rates.invites'), ('rates.likesForReposts', 'rates.likesForReposts'),
+                         ('rates.reposts', 'rates.reposts'), ('rates.likes', 'rates.likes'),
+                         ('period.duration', 'period.duration'), ('rates.repostsForReposts', 'rates.repostsForReposts'),
+                         ('period.start', 'period.start')], max_length=100, primary_key=True, serialize=False),
+        ),
+        migrations.AlterField(
+            model_name='settings',
+            name='key',
+            field=models.CharField(
+                choices=[('rates.invites', 'rates.invites'), ('rates.likesForReposts', 'rates.likesForReposts'),
+                         ('period.duration', 'period.duration'), ('rates.likesForOwnPosts', 'rates.likesForOwnPosts'),
+                         ('rates.likes', 'rates.likes'), ('rates.repostsForReposts', 'rates.repostsForReposts'),
+                         ('period.start', 'period.start'), ('rates.repostsForOwnPosts', 'rates.repostsForOwnPosts'),
+                         ('rates.reposts', 'rates.reposts'), ('rates.ownPosts', 'rates.ownPosts')], max_length=100,
+                primary_key=True, serialize=False),
         ),
     ]

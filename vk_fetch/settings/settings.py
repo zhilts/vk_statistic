@@ -177,7 +177,7 @@ LOGGING = {
         },
         'runner': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
         'django.views.static.serve': {
             'handlers': ['console'],
