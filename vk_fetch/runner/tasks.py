@@ -31,7 +31,7 @@ def reload_all_proxies():
 def fetch_all():
     period = current_period()
     job = chain(
-        # reload_all_proxies.si(),
+        reload_all_proxies.si(),
         update_groups.si(period.pk),
         update_all_users.si()
     )()
