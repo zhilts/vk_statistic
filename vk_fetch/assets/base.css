@@ -7,7 +7,9 @@
 }
 
 .context {
-    width: 400px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
     margin: auto;
     height: auto;
     text-align: -webkit-center;
