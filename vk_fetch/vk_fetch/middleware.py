@@ -12,6 +12,5 @@ class CreateUserMiddleware:
 class CurrentUserMiddleware:
     def process_request(self, request):
         user_id = request.GET.get('viewer_id', None)
-        print(user_id)
         if user_id is not None:
             request.session['user_id'] = user_id
