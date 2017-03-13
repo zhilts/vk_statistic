@@ -33,7 +33,7 @@ def fetch_all():
     job = chain(
         # reload_all_proxies.si(),
         update_groups.si(period.pk),
-        # update_all_users.si()
+        update_all_users.si()
     )()
     return job.get()
 

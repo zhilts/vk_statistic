@@ -3,5 +3,6 @@
 pushd /vagrant
 
 fab pysetup
+fab rdb
 
 popd

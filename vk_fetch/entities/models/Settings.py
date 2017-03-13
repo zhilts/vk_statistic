@@ -7,6 +7,9 @@ class SettingsKey:
     RATE_LIKES_FOR_REPOSTS = 'rates.likesForReposts'
     RATE_REPOSTS_FOR_REPOSTS = 'rates.repostsForReposts'
     RATE_INVITES = 'rates.invites'
+    RATE_POSTS = 'rates.ownPosts'
+    RATE_LIKES_FOR_OWN_POSTS = 'rates.likesForOwnPosts'
+    RATE_REPOSTS_FOR_OWN_POSTS = 'rates.repostsForOwnPosts'
     PERIOD_DURATION = 'period.duration'
     PERIOD_START = 'period.start'
 

@@ -12,6 +12,9 @@ class VkUserStatisticBase(models.Model):
     likes_for_reposts = models.IntegerField(default=0)
     reposts_for_reposts = models.IntegerField(default=0)
     invites = models.IntegerField(default=0)
+    posts = models.IntegerField(default=0)
+    likes_for_own_posts = models.IntegerField(default=0)
+    reposts_for_own_posts = models.IntegerField(default=0)
 
     class Meta:
         abstract = True

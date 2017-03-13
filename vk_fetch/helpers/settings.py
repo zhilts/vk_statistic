@@ -24,6 +24,9 @@ def rate_settings():
         SettingsKey.RATE_LIKES_FOR_REPOSTS,
         SettingsKey.RATE_REPOSTS_FOR_REPOSTS,
         SettingsKey.RATE_INVITES,
+        SettingsKey.RATE_POSTS,
+        SettingsKey.RATE_LIKES_FOR_OWN_POSTS,
+        SettingsKey.RATE_REPOSTS_FOR_OWN_POSTS,
     ]
     settings = Settings.objects.filter(pk__in=rate_keys)
     settings_dict = settings_to_dict(settings)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-23 17:43+0000\n"
+"POT-Creation-Date: 2017-03-13 22:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,11 +41,11 @@ msgstr "За 3 дня"
 msgid "Cycle"
 msgstr "Круг"
 
-#: entities/templates/top_ten.html:7 entities/views/UserDetails.py:68
+#: entities/templates/top_ten.html:7 entities/views/UserDetails.py:75
 msgid "Rating"
 msgstr "Место"
 
-#: entities/templates/top_ten.html:8 entities/views/UserDetails.py:69
+#: entities/templates/top_ten.html:8 entities/views/UserDetails.py:76
 msgid "Karma"
 msgstr "Карма"
 
@@ -61,54 +61,78 @@ msgstr "Имя"
 msgid "No activity detected"
 msgstr "Пока активности не обнаружено"
 
-#: entities/views/UserDetails.py:60
+#: entities/views/UserDetails.py:64
 msgid "For each like you will get"
 msgstr "За каждый лайк вы получаете"
 
-#: entities/views/UserDetails.py:61
+#: entities/views/UserDetails.py:65
 msgid "For each repost you will get"
 msgstr "За каждый репост вы получаете"
 
-#: entities/views/UserDetails.py:62
+#: entities/views/UserDetails.py:66
 msgid "For each like on your repost you will get"
 msgstr "За каждый лайк вашего репоста вы получаете"
 
-#: entities/views/UserDetails.py:63
+#: entities/views/UserDetails.py:67
 msgid "For each repost of your repost you will get"
 msgstr "За каждый репост вашего репоста вы получаете"
 
-#: entities/views/UserDetails.py:64
+#: entities/views/UserDetails.py:68
 msgid "For each new player from your invites you will get"
 msgstr "За каждого друга, пришедшего по вашему приглашению вы получаете"
 
+#: entities/views/UserDetails.py:69
+msgid "For each new post you will get"
+msgstr "За каждый ноый пост вы получаете"
+
 #: entities/views/UserDetails.py:70
+msgid "For each like on your post you will get"
+msgstr "За каждый лайк вашего поста вы получаете"
+
+#: entities/views/UserDetails.py:71
+msgid "For each repost on your post you will get"
+msgstr "За каждый репост вашего поста вы получаете"
+
+#: entities/views/UserDetails.py:77
 msgid "Likes"
 msgstr "Лайки"
 
-#: entities/views/UserDetails.py:71
+#: entities/views/UserDetails.py:78
 msgid "Reposts"
 msgstr "Репосты"
 
-#: entities/views/UserDetails.py:72
+#: entities/views/UserDetails.py:79
 msgid "Likes for Reposts"
 msgstr "Лайки репостов"
 
-#: entities/views/UserDetails.py:73
+#: entities/views/UserDetails.py:80
 msgid "Reposts for Reposts"
 msgstr "Репосты репостов"
 
-#: entities/views/UserDetails.py:74
+#: entities/views/UserDetails.py:81
 msgid "Invited"
 msgstr "Приглашения"
 
-#: entities/views/UserDetails.py:80
+#: entities/views/UserDetails.py:82
+msgid "Posts"
+msgstr "Посты"
+
+#: entities/views/UserDetails.py:83
+msgid "Likes for Own Posts"
+msgstr "Лайки собственных постов"
+
+#: entities/views/UserDetails.py:84
+msgid "Reposts for Own Posts"
+msgstr "Репосты собственных постов"
+
+#: entities/views/UserDetails.py:90
 msgid "for your karma"
 msgstr "к карме"
 
-#: settings/settings.py:117
+#: settings/settings.py:118
 msgid "English"
 msgstr "Английский"
 
-#: settings/settings.py:118
+#: settings/settings.py:119
 msgid "Russian"
 msgstr "Русский"

@@ -14,9 +14,10 @@ httplib.HTTPConnection.debuglevel = 0
 
 base_url = 'https://api.vk.com/method/{method_name}'
 paging = 100
+MAX_POST_SKIP = 3
 
 base_request_pairs = (
-    ('v', '5.50'),
+    ('v', '5.53'),
 )
 base_iteration_request_pairs = base_request_pairs + (
     ('count', paging),
@@ -67,8 +68,9 @@ def safe_get(*args, **kwargs):
             logger.debug('request with {args} {kwargs} starting'.format(args=args, kwargs=kwargs))
             res = requests.post(*args, **kwargs)
             if res.status_code < 200 or res.status_code >= 400 or res.json().get('error', None) is not None:
-                msg = 'response.post() error args={args}, kwargs={kwargs}, res={res}, status={status}' \
-                    .format(args=args, kwargs=kwargs, res=res, status=res.status_code)
+                msg = 'response.post() error args={args}, kwargs={kwargs}, res={res}, status={status}, error={error}' \
+                    .format(args=args, kwargs=kwargs, res=res, status=res.status_code,
+                            error=res.json().get('error', None))
                 raise VkApiError(msg)
             return res
         except Exception as ex:
@@ -147,24 +149,30 @@ def get_group_info(group_id):
     return info
 
 
-def posts_for_group(group_domain):
+def posts_for_group(group_domain, owner_id):
     return _vk_iterator(
         VkAPI.WALL_GET,
         dict(
             domain=group_domain,
+            owner_id=owner_id,
             filter='all'
         )
     )
 
 
-def posts_for_group_in_period(group_domain, start_date):
-    for post in posts_for_group(group_domain):
-        post_timestamp = from_unix_time(post.get('date', 0))
+def posts_for_group_in_period(group_domain, owner_id, start_date):
+    skipped = 0
+    for post in posts_for_group(group_domain, owner_id):
+        post_date = post.get('date', 0)
+        post_timestamp = from_unix_time(post_date)
         if post_timestamp >= start_date:
             yield post
         else:
             logger.debug('skipping {post_id}'.format(post_id=post.get('id', None)))
-            break
+            if skipped > MAX_POST_SKIP:
+                break
+            else:
+                skipped += 1
 
 
 def likes_for_post(post_id, owner_id):

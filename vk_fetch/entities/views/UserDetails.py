@@ -53,7 +53,11 @@ class Row:
     LIKES_FOR_REPOSTS = 'likes_for_reposts'
     REPOSTS_FOR_REPOSTS = 'reposts_for_reposts'
     INVITES = 'invites'
-    ALL = [RATING, TOTAL_SCORE, LIKES, REPOSTS, LIKES_FOR_REPOSTS, REPOSTS_FOR_REPOSTS, INVITES]
+    POSTS = 'posts'
+    LIKES_FOR_OWN_POSTS = 'likes_for_own_posts'
+    REPOSTS_FOR_OWN_POSTS = 'reposts_for_own_posts'
+    ALL = [RATING, TOTAL_SCORE, LIKES, REPOSTS, LIKES_FOR_REPOSTS, REPOSTS_FOR_REPOSTS, INVITES, POSTS,
+           LIKES_FOR_OWN_POSTS, REPOSTS_FOR_OWN_POSTS]
 
 
 _tooltips = {
@@ -62,6 +66,9 @@ _tooltips = {
     Row.LIKES_FOR_REPOSTS: lambda: _('For each like on your repost you will get'),
     Row.REPOSTS_FOR_REPOSTS: lambda: _('For each repost of your repost you will get'),
     Row.INVITES: lambda: _('For each new player from your invites you will get'),
+    Row.POSTS: lambda: _('For each new post you will get'),
+    Row.LIKES_FOR_OWN_POSTS: lambda: _('For each like on your post you will get'),
+    Row.REPOSTS_FOR_OWN_POSTS: lambda: _('For each repost on your post you will get'),
 }
 
 _titles = {
@@ -72,6 +79,9 @@ _titles = {
     Row.LIKES_FOR_REPOSTS: lambda: _('Likes for Reposts'),
     Row.REPOSTS_FOR_REPOSTS: lambda: _('Reposts for Reposts'),
     Row.INVITES: lambda: _('Invited'),
+    Row.POSTS: lambda: _('Posts'),
+    Row.LIKES_FOR_OWN_POSTS: lambda: _('Likes for Own Posts'),
+    Row.REPOSTS_FOR_OWN_POSTS: lambda: _('Reposts for Own Posts'),
 }
 
 
@@ -89,6 +99,11 @@ def _get_title(key, rates):
     return _titles[key]() + suffix
 
 
+RATE_DICT = [
+    [Row.LIKES, SettingsKey.RATE_LIKES]
+]
+
+
 def _get_rates():
     rates = rate_settings()
     return dict(
@@ -97,4 +112,7 @@ def _get_rates():
         likes_for_reposts=rates[SettingsKey.RATE_LIKES_FOR_REPOSTS],
         reposts_for_reposts=rates[SettingsKey.RATE_REPOSTS_FOR_REPOSTS],
         invites=rates[SettingsKey.RATE_INVITES],
+        posts=rates[SettingsKey.RATE_POSTS],
+        likes_for_own_posts=rates[SettingsKey.RATE_LIKES_FOR_OWN_POSTS],
+        reposts_for_own_posts=rates[SettingsKey.RATE_REPOSTS_FOR_OWN_POSTS],
     )
