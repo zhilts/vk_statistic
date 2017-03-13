@@ -12,19 +12,19 @@
 <body>
 <div class="stopwatch">{% trans 'Cycle will end in' %} <span id="stopwatch"></span></div>
 <div class="context">
-    {% if request.GET.viewer_id %}
-        <a href="{% url 'group-user' group_id=group_id user_id=request.GET.viewer_id %}?viewer_id={% firstof request.GET.viewer_id "0" %}">
+    {% if viewer_id > 0 %}
+        <a href="{% url 'group-user' group_id=group_id user_id=viewer_id %}">
             <button>
                 {% trans 'My' %}
             </button>
         </a>
     {% endif %}
-    <a href="{% url 'top-ten' group_id %}?viewer_id={% firstof request.GET.viewer_id "0" %}">
+    <a href="{% url 'top-ten' group_id %}">
         <button>
             {% trans 'Total' %}
         </button>
     </a>
-    <a href="{% url 'top-ten-period-current' group_id %}?viewer_id={% firstof request.GET.viewer_id "0" %}">
+    <a href="{% url 'top-ten-period-current' group_id %}">
         <button>
             {% trans 'Last 3 days' %}
         </button>

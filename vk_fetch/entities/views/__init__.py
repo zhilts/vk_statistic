@@ -51,6 +51,7 @@ class BaseTopView(ListView):
     def get_context_data(self, **kwargs):
         context = super(BaseTopView, self).get_context_data(**kwargs)
         context['group_id'] = self.group_id
+        context['viewer_id'] = self._viewer_id()
 
         context['end_of_period'] = end_of_period().isoformat()
         return context
@@ -64,7 +65,7 @@ class BaseTopView(ListView):
             add_invite.delay(group_id=group_id, viewer_id=viewer_id, user_id=user_id)
 
     def get_queryset(self):
-        viewer_id = int(self.request.GET.get('viewer_id', 0))
+        viewer_id = self._viewer_id()
         self.group_id = int(self.kwargs.get('group_id'))
         self.update_invites(viewer_id, self.request.GET)
 
@@ -81,6 +82,9 @@ class BaseTopView(ListView):
 
         sort = sorted(qs, key=lambda u: (u.rating, u.screen_name))
         return sort
+
+    def _viewer_id(self):
+        return int(self.request.session.get('user_id', 0))
 
 
 class UserTopTenView(BaseTopView):

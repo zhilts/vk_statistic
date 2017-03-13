@@ -48,7 +48,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'vk_fetch.middleware.CreateUserMiddleware'
+    'vk_fetch.middleware.CreateUserMiddleware',
+    'vk_fetch.middleware.CurrentUserMiddleware'
 ]
 
 ROOT_URLCONF = 'vk_fetch.urls'
