@@ -3,9 +3,18 @@
     "model": "entities.vkgroup",
     "pk": 1,
     "fields": {
+      "vk_id": 725,
+      "domain": "club725",
+      "active": true
+    }
+  },
+  {
+    "model": "entities.vkgroup",
+    "pk": 2,
+    "fields": {
       "vk_id": 1253571,
       "domain": "sigmasoftware",
-      "active": true
+      "active": false
     }
   }
 ]
