@@ -17,10 +17,10 @@ def update_post(post_data, group):
     post, _ = VkPost.objects.update_or_create(
         post_id=post_data['id'],
         group=group,
-        from_id=from_id,
-        author=author,
-        date=date,
         defaults=dict(
+            from_id=from_id,
+            author=author,
+            date=date,
             likes_count=post_data.get('likes', {}).get('count'),
             reposts_count=post_data.get('reposts', {}).get('count'),
             text=post_data.get('text', None)
