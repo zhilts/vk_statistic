@@ -70,33 +70,10 @@ python-boto:
 
 {% endif %}
 
-
-### Shell Configs
-#/root/.bashrc:
-#  file.managed:
-#    - source: salt://base/files/bashrc
-#    - mode: 0755
-
-#/root/.vimrc:
-#  file.managed:
-#    - source: salt://base/files/vimrc
-#    - mode: 0755
-
 /etc/profile.d/color-prompt.sh:
   file.managed:
     - source: salt://base/files/color-prompt.sh
     - mode: 0755
-
-
-
-### resolv.conf
-#{% from "base/map.jinja" import base with context %}
-#/etc/resolv.conf:
-#  file.managed:
-#    - source: salt://base/files/resolv.conf
-#    - template: jinja
-#    - mode: 0644
-
 
 ## SELinux
 /etc/selinux/config:
@@ -107,19 +84,6 @@ python-boto:
   cmd.wait:
     - watch:
       - file: /etc/selinux/config
-
-
-## sysctl
-## make sure conntrack module is loaded
-#modprobe ip_conntrack:
-#  cmd.run:
-#    - unless: lsmod | grep nf_conntrack
-#
-#{% for key,val in pillar['sysctl'].items() %}
-#{{key}}:
-#  sysctl.present:
-#    - value: {{val}}
-#{% endfor %}
 
 # Add sysctl.d support to centos6
 /etc/sysctl.d:

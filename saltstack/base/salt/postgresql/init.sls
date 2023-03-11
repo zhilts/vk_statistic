@@ -1,24 +1,5 @@
 {% set pgVer = '9.4' %}
 {% set pgVerCompact = pgVer|replace('.','') %}
-#include:
-#  - repos.postgresql-{{ pgVerCompact }}
-
-#postgresql-python:
-#  pkg.latest:
-#    - name:
-#      - postgresql{{ pgVerCompact }}
-##      - postgresql{{ pgVerCompact }}-python
-#    - order: 1
-
-#/etc/systemd/system/postgresql.service:
-#  file.managed:
-#    - template: jinja
-#    - source: salt://postgresql/files/postgresql.service
-#    - user: postgres
-#    - group: postgres
-#    - mode: 0644
-#    - require:
-#      - pkg: postgresql-server
 
 /etc/postgres:
   file.directory:
@@ -47,8 +28,6 @@ postgres-pkg:
       - file: /etc/postgres
 
 postgresql-server:
-#  cmd.run:
-#    - creates: /var/lib/pgsql/{{ pgVer }}/data/postgresql.conf
   service:
     - running
     - name: postgresql
@@ -93,8 +72,6 @@ postgresql-server:
     - mode: 600
     - require:
       - service: postgresql-server
-#    - watch_in:
-#      - service: postgresql
 
 /etc/postgresql/{{ pgVer }}/main/pg_hba.conf:
   file.managed:
